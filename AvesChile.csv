@@ -1,0 +1,552 @@
+Scientific.Name,Orden.taxonómico,Orden,Familia,Nombre.común,English.name,Taxón.IUCN,Categoría.IUCN,Categoría.RCE,Proceso
+Rhea pennata,1,Rheiiformes,Rheidae,Ñandú,Lesser Rhea,Rhea pennata / Rhea tarapacensis,LC,Ver ssp.,
+Nothoprocta ornata,2,Tinamiformes,Tinamidae,Perdiz cordillerana,Ornate Tinamou,Nothoprocta ornata,LC,,
+Nothoprocta perdicaria,3,Tinamiformes,Tinamidae,Perdiz chilena,Chilean Tinamou,Nothoprocta perdicaria,LC,,
+Nothoprocta pentlandii,4,Tinamiformes,Tinamidae,Perdiz andina,Andean Tinamou,Nothoprocta pentlandii,LC,,
+Eudromia elegans,5,Tinamiformes,Tinamidae,Perdiz copetona,Elegant Crested-Tinamou,Eudromia elegans,LC,EN,RCE 14
+Tinamotis pentlandii,6,Tinamiformes,Tinamidae,Perdiz de la puna,Puna Tinamou,Tinamotis pentlandii,LC,LC,RCE 14
+Tinamotis ingoufi,7,Tinamiformes,Tinamidae,Perdiz austral,Patagonian Tinamou,Tinamotis ingoufi,LC,VU,RCE 14
+Chauna torquata,8,Anseriformes,Anhimidae,Chajá,Southern Screamer,Chauna torquata,LC,,
+Dendrocygna bicolor,9,Anseriformes,Anatidae,Pato silbón colorado,Fulvous Whistling-Duck,Dendrocygna bicolor,LC,,
+Dendrocygna viduata,10,Anseriformes,Anatidae,Pato silbón pampa,White-faced Whistling-Duck,Dendrocygna viduata,LC,,
+Dendrocygna autumnalis,11,Anseriformes,Anatidae,Pato silbón de ala blanca,Black-bellied Whistling-Duck,Dendrocygna autumnalis,LC,,
+Cygnus melancoryphus,12,Anseriformes,Anatidae,Cisne de cuello negro,Black-necked Swan,Cygnus melancoryphus,LC,LC,RCE 16
+Coscoroba coscoroba,13,Anseriformes,Anatidae,Cisne coscoroba,Coscoroba Swan,Coscoroba coscoroba,LC,LC,RCE 16
+Oressochen melanopterus,14,Anseriformes,Anatidae,Piuquén,Andean Goose,Chloephaga melanoptera,LC,"LC (XV-IV), EN (V-XII)",RCE 16
+Chloephaga picta,15,Anseriformes,Anatidae,Caiquén,Upland Goose,Chloephaga picta,LC,,
+Chloephaga hybrida,16,Anseriformes,Anatidae,Caranca,Kelp Goose,Chloephaga hybrida,LC,VU,RCE 12
+Chloephaga poliocephala,17,Anseriformes,Anatidae,Canquén com√∫n,Ashy-headed Goose,Chloephaga poliocephala,LC,,
+Chloephaga rubidiceps,18,Anseriformes,Anatidae,Canquén colorado,Ruddy-headed Goose,Chloephaga rubidiceps,LC,EN,RCE 1
+Sarkidiornis sylvicola,19,Anseriformes,Anatidae,Pato crestudo,Comb Duck,Sarkidiornis sylvicola,LC,,
+Merganetta armata,20,Anseriformes,Anatidae,Pato cortacorrientes,Torrent Duck,Merganetta armata,LC,NT,RCE 11
+Tachyeres patachonicus,21,Anseriformes,Anatidae,Quetru volador,Flying Steamer-Duck,Tachyeres patachonicus,LC,LC,RCE 12
+Tachyeres pteneres,22,Anseriformes,Anatidae,Quetru no volador,Flightless Steamer-Duck,Tachyeres pteneres,LC,NT,RCE 12
+Lophonetta specularioides,23,Anseriformes,Anatidae,Pato juarjual,Crested Duck,Lophonetta specularioides,LC,,
+Speculanas specularis,24,Anseriformes,Anatidae,Pato anteojillo,Spectacled Duck,Speculanas specularis,NT,NT,RCE 14
+Spatula puna,25,Anseriformes,Anatidae,Pato puna,Puna Teal,Spatula puna,LC,,
+Spatula versicolor,26,Anseriformes,Anatidae,Pato capuchino,Silver Teal,Spatula versicolor,LC,,
+Spatula platalea,27,Anseriformes,Anatidae,Pato cuchara,Red Shoveler,Spatula platalea,LC,LC,RCE 12
+Spatula discors,28,Anseriformes,Anatidae,Pato de alas azules,Blue-winged Teal,Spatula discors,LC,,
+Spatula cyanoptera,29,Anseriformes,Anatidae,Pato colorado,Cinnamon Teal,Spatula cyanoptera,LC,,
+Mareca sibilatrix,30,Anseriformes,Anatidae,Pato real,Chiloe Wigeon,Mareca sibilatrix,LC,,
+Anas bahamensis,31,Anseriformes,Anatidae,Pato gargantillo,White-cheeked Pintail,Anas bahamensis,LC,LC,RCE 12
+Anas georgica,32,Anseriformes,Anatidae,Pato jergón grande,Yellow-billed Pintail,Anas georgica,LC,,
+Anas flavirostris,33,Anseriformes,Anatidae,Pato jergón chico,Yellow-billed Teal,Anas flavirostris,LC,,
+Netta peposaca,34,Anseriformes,Anatidae,Pato negro,Rosy-billed Pochard,Netta peposaca,LC,,
+Heteronetta atricapilla,35,Anseriformes,Anatidae,Pato rinconero,Black-headed Duck,Heteronetta atricapilla,LC,LC,RCE 12
+Oxyura jamaicensis,36,Anseriformes,Anatidae,Pato rana de pico ancho,Ruddy Duck,Oxyura jamaicensis,LC,,
+Oxyura vittata,37,Anseriformes,Anatidae,Pato rana de pico delgado,Lake Duck,Oxyura vittata,LC,,
+Callipepla californica,38,Galliformes,Odontophoridae,Codorniz,California Quail,Callipepla californica,LC,,
+Phasianus colchicus,39,Galliformes,Phasianidae,Faisán de collar,Ring-necked Pheasant,Phasianus colchicus,LC,,
+Phoenicopterus chilensis,40,Phoenicopteriformes,Phoenicopteridae,Flamenco chileno,Chilean Flamingo,Phoenicopterus chilensis,NT,NT,RCE 15
+Phoenicoparrus andinus,41,Phoenicopteriformes,Phoenicopteridae,Parina grande,Andean Flamingo,Phoenicoparrus andinus,VU,VU,RCE 11
+Phoenicoparrus jamesi,42,Phoenicopteriformes,Phoenicopteridae,Parina chica,James's Flamingo,Phoenicoparrus jamesi,NT,VU,RCE 15
+Rollandia rolland,43,Podicipediformes,Podicipedidae,Pimpollo com√∫n,White-tufted Grebe,Rollandia rolland,LC,,
+Podilymbus podiceps,44,Podicipediformes,Podicipedidae,Picurio,Pied-billed Grebe,Podilymbus podiceps,LC,,
+Podiceps major,45,Podicipediformes,Podicipedidae,Huala,Great Grebe,Podiceps major,LC,,
+Podiceps occipitalis,46,Podicipediformes,Podicipedidae,Blanquillo,Silvery Grebe,Podiceps occipitalis,LC,,
+Podiceps gallardoi,47,Podicipediformes,Podicipedidae,Pimpollo tobiano,Hooded Grebe,Podiceps gallardoi,CR,,
+Columba livia,48,Columbiformes,Columbidae,Paloma doméstica,Rock Pigeon,Columba livia,LC,,
+Patagioenas picazuro,49,Columbiformes,Columbidae,Paloma picazuró,Picazuro Pigeon,Patagioenas picazuro,LC,,
+Patagioenas maculosa,50,Columbiformes,Columbidae,Paloma manchada,Spot-winged Pigeon,Patagioenas maculosa,LC,,
+Patagioenas araucana,51,Columbiformes,Columbidae,Torcaza,Chilean Pigeon,Patagioenas araucana,LC,LC,RCE 12
+Zenaida meloda,52,Columbiformes,Columbidae,Paloma de alas blancas,West Peruvian Dove,Zenaida meloda,LC,,
+Zenaida auriculata,53,Columbiformes,Columbidae,T√≥rtola,Eared Dove,Zenaida auriculata,LC,,
+Metriopelia ceciliae,54,Columbiformes,Columbidae,Tortolita boliviana,Bare-faced Ground Dove,Metriopelia ceciliae,LC,,
+Metriopelia melanoptera,55,Columbiformes,Columbidae,Tortolita cordillerana,Black-winged Ground Dove,Metriopelia melanoptera,LC,,
+Metriopelia aymara,56,Columbiformes,Columbidae,Tortolita de la puna,Golden-spotted Ground Dove,Metriopelia aymara,LC,,
+Columbina talpacoti,57,Columbiformes,Columbidae,Tortolita rojiza,Ruddy Ground Dove,Columbina talpacoti,LC,,
+Columbina picui,58,Columbiformes,Columbidae,Tortolita cuyana,Picui Ground Dove,Columbina picui,LC,,
+Columbina cruziana,59,Columbiformes,Columbidae,Tortolita quiguagua,Croaking Ground Dove,Columbina cruziana,LC,,
+Crotophaga ani,60,Cuculiformes,Cuculidae,Matacaballos de pico liso,Smooth-billed Ani,Crotophaga ani,LC,,
+Crotophaga sulcirostris,61,Cuculiformes,Cuculidae,Matacaballos,Groove-billed Ani,Crotophaga sulcirostris,LC,,
+Coccyzus melacoryphus,62,Cuculiformes,Cuculidae,Cuclillo de pico negro,Dark-billed Cuckoo,Coccyzus melacoryphus,LC,,
+Coccyzus americanus,63,Cuculiformes,Cuculidae,Cuclillo de pico amarillo,Yellow-billed Cuckoo,Coccyzus americanus,LC,,
+Steatornis caripensis,64,Steatornithiformes,Steatornithidae,Guácharo,Oilbird,Steatornis caripensis,LC,,
+Nyctibius griseus,65,Nyctibiiformes,Nyctibiidae,Urutaú,Common Potoo,Nyctibius griseus,LC,,
+Chordeiles nacunda,66,Caprimulgiformes,Caprimulgidae,Ñacundá,Nacunda Nighthawk,Chordeiles nacunda,LC,,
+Chordeiles acutipennis,67,Caprimulgiformes,Caprimulgidae,Gallina ciega peruana,Lesser Nighthawk,Chordeiles acutipennis,LC,,
+Chordeiles minor,68,Caprimulgiformes,Caprimulgidae,Gallina ciega boreal,Common Nighthawk,Chordeiles minor,LC,,
+Systellura longirostris,69,Caprimulgiformes,Caprimulgidae,Gallina ciega común,Band-winged Nightjar,Systellura longirostris,LC,,
+Systellura decussata,70,Caprimulgiformes,Caprimulgidae,Gallina ciega chica,Tschudi's Nightjar,Systellura decussata,LC,,
+Streptoprocne zonaris,71,Apodiformes,Apodidae,Vencejo de collar,White-collared Swift,Streptoprocne zonaris,LC,,
+Chaetura pelagica,72,Apodiformes,Apodidae,Vencejo de chimenea,Chimney Swift,Chaetura pelagica,VU,,
+Aeronautes andecolus,73,Apodiformes,Apodidae,Vencejo chico,Andean Swift,Aeronautes andecolus,LC,,
+Colibri coruscans,74,Apodiformes,Trochilidae,Picaflor azul,Sparkling Violetear,Colibri coruscans,LC,,
+Sephanoides sephaniodes,75,Apodiformes,Trochilidae,Picaflor chico,Green-backed Firecrown,Sephanoides sephaniodes,LC,,
+Sephanoides fernandensis,76,Apodiformes,Trochilidae,Picaflor de Juan Fernández,Juan Fernandez Firecrown,Sephanoides fernandensis,CR,CR,RCE 15
+Oreotrochilus estella,77,Apodiformes,Trochilidae,Picaflor de la puna,Andean Hillstar,Oreotrochilus estella,LC,,
+Oreotrochilus leucopleurus,78,Apodiformes,Trochilidae,Picaflor cordillerano,White-sided Hillstar,Oreotrochilus leucopleurus,LC,,
+Patagona gigas,79,Apodiformes,Trochilidae,Picaflor gigante,Giant Hummingbird,Patagona gigas,LC,,
+Eulidia yarrellii,80,Apodiformes,Trochilidae,Picaflor de Arica,Chilean Woodstar,Eulidia yarrellii,CR,CR,RCE 13
+Rhodopis vesper,81,Apodiformes,Trochilidae,Picaflor del norte,Oasis Hummingbird,Rhodopis vesper,LC,,
+Thaumastura cora,82,Apodiformes,Trochilidae,Picaflor de Cora,Peruvian Sheartail,Thaumastura cora,LC,,
+Chlorostilbon lucidus,83,Apodiformes,Trochilidae,Picaflor de pico rojo,Glittering-bellied Emerald,Chlorostilbon lucidus,LC,,
+Aramus guarauna,84,Gruiformes,Aramidae,Carau,Limpkin,Aramus guarauna,LC,,
+Rallus antarcticus,85,Gruiformes,Rallidae,Pidén austral,Austral Rail,Rallus antarcticus,VU,VU,RCE 15
+Porphyrio martinica,86,Gruiformes,Rallidae,Tagüita purpúrea,Purple Gallinule,Porphyrio martinicus,LC,,
+Laterallus jamaicensis,87,Gruiformes,Rallidae,Pidencito,Black Rail,Laterallus jamaicensis,EN,"EN (XV-III), NT (IV-XII)",RCE 15
+Pardirallus maculatus,88,Gruiformes,Rallidae,Pidén moteado,Spotted Rail,Pardirallus maculatus,LC,,
+Pardirallus sanguinolentus,89,Gruiformes,Rallidae,Pidén común,Plumbeous Rail,Pardirallus sanguinolentus,LC,,
+Porphyriops melanops,90,Gruiformes,Rallidae,Tagüita común,Spot-flanked Gallinule,Porphyriops melanops,LC,,
+Porzana spiloptera,91,Gruiformes,Rallidae,Burrito negruzco,Dot-winged Crake,Laterallus spilopterus,VU,,
+Gallinula galeata,92,Gruiformes,Rallidae,Tagüita del norte,Common Gallinule,Gallinula galeata,LC,,
+Fulica rufifrons,93,Gruiformes,Rallidae,Tagua de frente roja,Red-fronted Coot,Fulica rufifrons,LC,,
+Fulica cornuta,94,Gruiformes,Rallidae,Tagua cornuda,Horned Coot,Fulica cornuta,NT,NT,RCE 11
+Fulica gigantea,95,Gruiformes,Rallidae,Tagua gigante,Giant Coot,Fulica gigantea,LC,LC,RCE 15
+Fulica armillata,96,Gruiformes,Rallidae,Tagua común,Red-gartered Coot,Fulica armillata,LC,,
+Fulica ardesiaca,97,Gruiformes,Rallidae,Tagua andina,Slate-colored Coot,Fulica ardesiaca,LC,,
+Fulica leucoptera,98,Gruiformes,Rallidae,Tagua chica,White-winged Coot,Fulica leucoptera,LC,,
+Pluvialis dominica,99,Charadriiformes,Charadriidae,Chorlo dorado,American Golden-Plover,Pluvialis dominica,LC,,
+Pluvialis fulva,100,Charadriiformes,Charadriidae,Chorlo dorado del Pacífico,Pacific Golden-Plover,Pluvialis fulva,LC,,
+Pluvialis squatarola,101,Charadriiformes,Charadriidae,Chorlo ártico,Black-bellied Plover,Pluvialis squatarola,LC,,
+Oreopholus ruficollis,102,Charadriiformes,Charadriidae,Chorlo de campo,Tawny-throated Dotterel,Oreopholus ruficollis,LC,NT Desde Regi√≥n de Antofagasta hasta regi√≥n de Los Lagos. LC resto del pa√≠s,RCE 15
+Vanellus chilensis,103,Charadriiformes,Charadriidae,Queltehue común,Southern Lapwing,Vanellus chilensis,LC,,
+Vanellus resplendens,104,Charadriiformes,Charadriidae,Queltehue de la puna,Andean Lapwing,Vanellus resplendens,LC,,
+Zonibyx modestus,105,Charadriiformes,Charadriidae,Chorlo chileno,Rufous-chested Dotterel,Charadrius modestus,LC,LC,RCE 17
+Charadrius vociferus,106,Charadriiformes,Charadriidae,Chorlo gritón,Killdeer,Charadrius vociferus,LC,,
+Charadrius semipalmatus,107,Charadriiformes,Charadriidae,Chorlo semipalmado,Semipalmated Plover,Charadrius semipalmatus,LC,,
+Anarhynchus wilsonia,108,Charadriiformes,Charadriidae,Chorlo de pico grueso,Wilson's Plover,Charadrius wilsonia,LC,,
+Anarhynchus collaris,109,Charadriiformes,Charadriidae,Chorlo de collar,Collared Plover,Charadrius collaris,LC,NT,RCE 17
+Anarhynchus alticola,110,Charadriiformes,Charadriidae,Chorlo de la puna,Puna Plover,Charadrius alticola,LC,,
+Anarhynchus falklandicus,111,Charadriiformes,Charadriidae,Chorlo de doble collar,Two-banded Plover,Charadrius falklandicus,LC,,
+Anarhynchus nivosus,112,Charadriiformes,Charadriidae,Chorlo nevado,Snowy Plover,Charadrius nivosus,NT,VU,RCE 15
+Phegornis mitchellii,113,Charadriiformes,Charadriidae,Chorlito cordillerano,Diademed Sandpiper-Plover,Phegornis mitchellii,NT,NT,RCE 15
+Haematopus palliatus,114,Charadriiformes,Haematopodidae,Pilpilén común,American Oystercatcher,Haematopus palliatus,LC,NT,RCE 16
+Haematopus ater,115,Charadriiformes,Haematopodidae,Pilpilén negro,Blackish Oystercatcher,Haematopus ater,LC,,
+Haematopus leucopodus,116,Charadriiformes,Haematopodidae,Pilpilén austral,Magellanic Oystercatcher,Haematopus leucopodus,LC,,
+Himantopus mexicanus,117,Charadriiformes,Recurvirostridae,Perrito,Black-necked Stilt,Himantopus himantopus,LC,,
+Recurvirostra andina,118,Charadriiformes,Recurvirostridae,Caití,Andean Avocet,Recurvirostra andina,LC,VU,RCE 17
+Burhinus superciliaris,119,Charadriiformes,Burhinidae,Chorlo cabezón,Peruvian Thick-knee,Burhinus superciliaris,LC,,
+Chionis albus,120,Charadriiformes,Chionidae,Paloma antártica,Snowy Sheathbill,Chionis albus,LC,,
+Pluvianellus socialis,121,Charadriiformes,Pluvianellidae,Chorlo de Magallanes,Magellanic Plover,Pluvianellus socialis,NT,EN,RCE 16
+Bartramia longicauda,122,Charadriiformes,Scolopacidae,Batitú,Upland Sandpiper,Bartramia longicauda,LC,LC,RCE 17
+Numenius tahitiensis,123,Charadriiformes,Scolopacidae,Zarapito polinésico,Bristle-thighed Curlew,Numenius tahitiensis,NT,,
+Numenius borealis,124,Charadriiformes,Scolopacidae,Zarapito boreal,Eskimo Curlew,Numenius borealis,CR,CR,RCE 9
+Numenius phaeopus,125,Charadriiformes,Scolopacidae,Zarapito común,Whimbrel,Numenius phaeopus,LC,LC,RCE 17
+Limosa lapponica,126,Charadriiformes,Scolopacidae,Zarapito de cola barrada,Bar-tailed Godwit,Limosa lapponica,NT,,
+Limosa haemastica,127,Charadriiformes,Scolopacidae,Zarapito de pico recto,Hudsonian Godwit,Limosa haemastica,LC,,
+Limosa fedoa,128,Charadriiformes,Scolopacidae,Zarapito moteado,Marbled Godwit,Limosa fedoa,LC,,
+Arenaria interpres,129,Charadriiformes,Scolopacidae,Playero vuelvepiedras,Ruddy Turnstone,Arenaria interpres,LC,,
+Calidris canutus,130,Charadriiformes,Scolopacidae,Playero ártico,Red Knot,Calidris canutus,NT,EN,RCE 2
+Calidris virgata,131,Charadriiformes,Scolopacidae,Playero de las rompientes,Surfbird,Calidris virgata,LC,,
+Calidris acuminata,132,Charadriiformes,Scolopacidae,Playero acuminado,Sharp-tailed Sandpiper,Calidris acuminata,VU,,
+Calidris himantopus,133,Charadriiformes,Scolopacidae,Playero de patas largas,Stilt Sandpiper,Calidris himantopus,LC,,
+Calidris ferruginea,134,Charadriiformes,Scolopacidae,Playero zarapito,Curlew Sandpiper,Calidris ferruginea,NT,,
+Calidris alba,135,Charadriiformes,Scolopacidae,Playero blanco,Sanderling,Calidris alba,LC,,
+Calidris bairdii,136,Charadriiformes,Scolopacidae,Playero de Baird,Baird's Sandpiper,Calidris bairdii,LC,,
+Calidris minutilla,137,Charadriiformes,Scolopacidae,Playero enano,Least Sandpiper,Calidris minutilla,LC,,
+Calidris fuscicollis,138,Charadriiformes,Scolopacidae,Playero de lomo blanco,White-rumped Sandpiper,Calidris fuscicollis,LC,,
+Calidris subruficollis,139,Charadriiformes,Scolopacidae,Playero canela,Buff-breasted Sandpiper,Calidris subruficollis,NT,,
+Calidris melanotos,140,Charadriiformes,Scolopacidae,Playero pectoral,Pectoral Sandpiper,Calidris melanotos,LC,,
+Calidris pusilla,141,Charadriiformes,Scolopacidae,Playero semipalmado,Semipalmated Sandpiper,Calidris pusilla,NT,,
+Calidris mauri,142,Charadriiformes,Scolopacidae,Playero occidental,Western Sandpiper,Calidris mauri,LC,,
+Limnodromus griseus,143,Charadriiformes,Scolopacidae,Becacina chica,Short-billed Dowitcher,Limnodromus griseus,LC,,
+Gallinago stricklandii,144,Charadriiformes,Scolopacidae,Becacina grande,Fuegian Snipe,Gallinago stricklandii,NT,,
+Gallinago magellanica,145,Charadriiformes,Scolopacidae,Becacina común,Magellanic Snipe,Gallinago paraguaiae,LC,LC,RCE 12
+Gallinago andina,146,Charadriiformes,Scolopacidae,Becacina de la puna,Puna Snipe,Gallinago andina,LC,,
+Phalaropus tricolor,147,Charadriiformes,Scolopacidae,Pollito de mar tricolor,Wilson's Phalarope,Steganopus tricolor,LC,,
+Phalaropus lobatus,148,Charadriiformes,Scolopacidae,Pollito de mar boreal,Red-necked Phalarope,Phalaropus lobatus,LC,,
+Phalaropus fulicarius,149,Charadriiformes,Scolopacidae,Pollito de mar rojizo,Red Phalarope,Phalaropus fulicarius,LC,,
+Actitis macularius,150,Charadriiformes,Scolopacidae,Playero manchado,Spotted Sandpiper,Actitis macularius,LC,,
+Tringa solitaria,151,Charadriiformes,Scolopacidae,Pitotoy solitario,Solitary Sandpiper,Tringa solitaria,LC,,
+Tringa incana,152,Charadriiformes,Scolopacidae,Playero gris,Wandering Tattler,Tringa incana,LC,,
+Tringa melanoleuca,153,Charadriiformes,Scolopacidae,Pitotoy grande,Greater Yellowlegs,Tringa melanoleuca,LC,,
+Tringa semipalmata,154,Charadriiformes,Scolopacidae,Playero grande,Willet,Tringa semipalmata,LC,,
+Tringa flavipes,155,Charadriiformes,Scolopacidae,Pitotoy chico,Lesser Yellowlegs,Tringa flavipes,LC,LC,RCE 17
+Attagis gayi,156,Charadriiformes,Thinocoridae,Perdicita cordillerana,Rufous-bellied Seedsnipe,Attagis gayi,LC,LC,RCE 12
+Attagis malouinus,157,Charadriiformes,Thinocoridae,Perdicita austral,White-bellied Seedsnipe,Attagis malouinus,LC,,
+Thinocorus orbignyianus,158,Charadriiformes,Thinocoridae,Perdicita cojón,Gray-breasted Seedsnipe,Thinocorus orbignyianus,LC,,
+Thinocorus rumicivorus,159,Charadriiformes,Thinocoridae,Perdicita chica,Least Seedsnipe,Thinocorus rumicivorus,LC,,
+Jacana jacana,160,Charadriiformes,Jacanidae,Jacana,Wattled Jacana,Jacana jacana,LC,,
+Nycticryphes semicollaris,161,Charadriiformes,Rostratulidae,Becacina pintada,South American Painted-Snipe,Nycticryphes semicollaris,LC,EN,RCE 15
+Stercorarius chilensis,162,Charadriiformes,Stercorariidae,Salteador chileno,Chilean Skua,Catharacta chilensis,LC,,
+Stercorarius maccormicki,163,Charadriiformes,Stercorariidae,Salteador polar,South Polar Skua,Catharacta maccormicki,LC,,
+Stercorarius antarcticus,164,Charadriiformes,Stercorariidae,Salteador pardo,Brown Skua,Catharacta antarctica,LC,,
+Stercorarius pomarinus,165,Charadriiformes,Stercorariidae,Salteador pomarino,Pomarine Jaeger,Stercorarius pomarinus,LC,,
+Stercorarius parasiticus,166,Charadriiformes,Stercorariidae,Salteador chico,Parasitic Jaeger,Stercorarius parasiticus,LC,,
+Stercorarius longicaudus,167,Charadriiformes,Stercorariidae,Salteador de cola larga,Long-tailed Jaeger,Stercorarius longicaudus,LC,,
+Rynchops niger,168,Charadriiformes,Rynchopidae,Rayador,Black Skimmer,Rynchops niger,LC,,
+Creagrus furcatus,169,Charadriiformes,Laridae,Gaviota de las Galápagos,Swallow-tailed Gull,Creagrus furcatus,LC,,
+Xema sabini,170,Charadriiformes,Laridae,Gaviota de Sabine,Sabine's Gull,Xema sabini,LC,,
+Chroicocephalus philadelphia,171,Charadriiformes,Laridae,Gaviota de Bonaparte,Bonaparte's Gull,Larus philadelphia,LC,,
+Chroicocephalus serranus,172,Charadriiformes,Laridae,Gaviota andina,Andean Gull,Larus serranus,LC,LC,RCE 15
+Chroicocephalus maculipennis,173,Charadriiformes,Laridae,Gaviota cáhuil,Brown-hooded Gull,Larus maculipennis,LC,,
+Chroicocephalus cirrocephalus,174,Charadriiformes,Laridae,Gaviota de capucho gris,Gray-hooded Gull,Larus cirrocephalus,LC,,
+Leucophaeus scoresbii,175,Charadriiformes,Laridae,Gaviota austral,Dolphin Gull,Larus scoresbii,LC,,
+Leucophaeus modestus,176,Charadriiformes,Laridae,Gaviota garuma,Gray Gull,Larus modestus,LC,VU,RCE 16
+Leucophaeus atricilla,177,Charadriiformes,Laridae,Gaviota reidora,Laughing Gull,Larus atricilla,LC,,
+Leucophaeus pipixcan,178,Charadriiformes,Laridae,Gaviota de Franklin,Franklin's Gull,Larus pipixcan,LC,LC,RCE 16
+Larus belcheri,179,Charadriiformes,Laridae,Gaviota peruana,Belcher's Gull,Larus belcheri,LC,,
+Larus dominicanus,180,Charadriiformes,Laridae,Gaviota dominicana,Kelp Gull,Larus dominicanus,LC,,
+Larus argentatus,181,Charadriiformes,Laridae,Gaviota argéntea,Herring Gull,Larus argentatus,LC,,
+Anous stolidus,182,Charadriiformes,Laridae,Gaviotín de San Félix,Brown Noddy,Anous stolidus,LC,VU,RCE 14
+Anous minutus,183,Charadriiformes,Laridae,Gaviotín de corona blanca,Black Noddy,Anous minutus,LC,,
+Anous albivitta,184,Charadriiformes,Laridae,Gaviotín de San Ambrosio,Gray Noddy,Anous albivittus,LC,,
+Gygis alba,185,Charadriiformes,Laridae,Gaviotín blanco,White Tern,Gygis alba,LC,,
+Onychoprion fuscatus,186,Charadriiformes,Laridae,Gaviotín apizarrado,Sooty Tern,Onychoprion fuscatus,LC,,
+Onychoprion lunatus,187,Charadriiformes,Laridae,Gaviotín pascuense,Grey-backed Tern,Onychoprion lunatus,LC,,
+Onychoprion anaethetus,188,Charadriiformes,Laridae,Gaviotín de bridas,Bridled Tern,Onychoprion anaethetus,LC,,
+Sternula antillarum,189,Charadriiformes,Laridae,Gaviotín chico boreal,Least Tern,Sternula antillarum,LC,,
+Sternula lorata,190,Charadriiformes,Laridae,Gaviotín chico,Peruvian Tern,Sternula lorata,EN,EN,RCE 1
+Gelochelidon nilotica,191,Charadriiformes,Laridae,Gaviotín de pico negro,Gull-billed Tern,Gelochelidon nilotica,LC,,
+Larosterna inca,192,Charadriiformes,Laridae,Gaviotín monja,Inca Tern,Larosterna inca,NT,NT,RCE 15
+Chlidonias niger,193,Charadriiformes,Laridae,Gaviotín negro,Black Tern,Chlidonias niger,LC,,
+Sterna hirundo,194,Charadriiformes,Laridae,Gaviotín boreal,Common Tern,Sterna hirundo,LC,,
+Sterna paradisaea,195,Charadriiformes,Laridae,Gaviotín ártico,Arctic Tern,Sterna paradisaea,LC,,
+Sterna hirundinacea,196,Charadriiformes,Laridae,Gaviotín sudamericano,South American Tern,Sterna hirundinacea,LC,,
+Sterna trudeaui,197,Charadriiformes,Laridae,Gaviotín piquerito,Snowy-crowned Tern,Sterna trudeaui,LC,,
+Thalasseus elegans,198,Charadriiformes,Laridae,Gaviotín elegante,Elegant Tern,Thalasseus elegans,NT,NT,RCE 16
+Thalasseus sandvicensis,199,Charadriiformes,Laridae,Gaviotín de Sandwich,Sandwich Tern,Thalasseus sandvicensis,LC,,
+Thalasseus maximus,200,Charadriiformes,Laridae,Gaviotín real,Royal Tern,Thalasseus maximus,LC,,
+Phaethon aethereus,201,Phaethontiformes,Phaethontidae,Ave del trópico de pico rojo,Red-billed Tropicbird,Phaethon aethereus,LC,,
+Phaethon rubricauda,202,Phaethontiformes,Phaethontidae,Ave del trópico de cola roja,Red-tailed Tropicbird,Phaethon rubricauda,LC,VU,RCE 14
+Phaethon lepturus,203,Phaethontiformes,Phaethontidae,Ave del trópico de cola blanca,White-tailed Tropicbird,Phaethon lepturus,LC,,
+Aptenodytes patagonicus,204,Sphenisciformes,Spheniscidae,Pingüino rey,King Penguin,Aptenodytes patagonicus,LC,,
+Aptenodytes forsteri,205,Sphenisciformes,Spheniscidae,Pingüino emperador,Emperor Penguin,Aptenodytes forsteri,NT,,
+Pygoscelis papua,206,Sphenisciformes,Spheniscidae,Pingüino papúa,Gentoo Penguin,Pygoscelis papua,LC,,
+Pygoscelis antarcticus,207,Sphenisciformes,Spheniscidae,Pingüino antártico,Chinstrap Penguin,Pygoscelis antarcticus,LC,,
+Eudyptula minor,208,Sphenisciformes,Spheniscidae,Pingüino azul,Little Penguin,Eudyptula minor,LC,,
+Spheniscus humboldti,209,Sphenisciformes,Spheniscidae,Pingüino de Humboldt,Humboldt Penguin,Spheniscus humboldti,VU,VU,RCE 2
+Spheniscus magellanicus,210,Sphenisciformes,Spheniscidae,Pingüino de Magallanes,Magellanic Penguin,Spheniscus magellanicus,LC,,
+Eudyptes chrysolophus,211,Sphenisciformes,Spheniscidae,Pingüino macaroni,Macaroni Penguin,Eudyptes chrysolophus,VU,,
+Eudyptes chrysocome,212,Sphenisciformes,Spheniscidae,Pingüino de penacho amarillo,Rockhopper Penguin,Eudyptes chrysocome,VU,,
+Phoebastria irrorata,213,Procellariiformes,Diomedeidae,Albatros de las Galápagos,Waved Albatross,Phoebastria irrorata,CR,CR,RCE 17
+Diomedea epomophora,214,Procellariiformes,Diomedeidae,Albatros real,Royal Albatross,Diomedea sanfordi / Diomedea epomophora,Ver ssp.,Ver ssp.,
+Diomedea exulans,215,Procellariiformes,Diomedeidae,Albatros errante,Wandering Albatross,Diomedea exulans / Diomedea antipodensis,Ver ssp.,,
+Phoebetria fusca,216,Procellariiformes,Diomedeidae,Albatros oscuro,Sooty Albatross,Phoebetria fusca,EN,,
+Phoebetria palpebrata,217,Procellariiformes,Diomedeidae,Albatros de manto claro,Light-mantled Albatross,Phoebetria palpebrata,NT,EN,RCE 17
+Thalassarche melanophris,218,Procellariiformes,Diomedeidae,Albatros de ceja negra,Black-browed Albatross,Thalassarche melanophris,LC,LC,RCE 11
+Thalassarche chrysostoma,219,Procellariiformes,Diomedeidae,Albatros de cabeza gris,Gray-headed Albatross,Thalassarche chrysostoma,EN,VU,RCE 15
+Thalassarche bulleri,220,Procellariiformes,Diomedeidae,Albatros de Buller,Buller's Albatross,Thalassarche bulleri,NT,NT,RCE 17
+Thalassarche cauta,221,Procellariiformes,Diomedeidae,Albatros de frente blanca,White-capped Albatross,Thalassarche cauta,NT,NT,RCE 17
+Thalassarche salvini,222,Procellariiformes,Diomedeidae,Albatros de Salvin,Salvin's Albatross,Thalassarche salvini,VU,VU,RCE 15
+Thalassarche eremita,223,Procellariiformes,Diomedeidae,Albatros de Chatam,Chatham Albatross,Thalassarche eremita,VU,VU,RCE 17
+Fregetta grallaria,224,Procellariiformes,Oceanitidae,Golondrina de mar de vientre blanco,White-bellied Storm-Petrel,Fregetta grallaria,LC,EN,RCE 4
+Fregetta tropica,225,Procellariiformes,Oceanitidae,Golondrina de mar de vientre negro,Black-bellied Storm-Petrel,Fregetta tropica,LC,,
+Nesofregetta fuliginosa,226,Procellariiformes,Oceanitidae,Golondrina de mar polinésica,Polynesian Storm-Petrel,Nesofregetta fuliginosa,EN,EN,RCE 14
+Oceanites oceanicus,227,Procellariiformes,Oceanitidae,Golondrina de mar de Wilson,Wilson's Storm-Petrel,Oceanites oceanicus,LC,,
+Oceanites pincoyae,228,Procellariiformes,Oceanitidae,Golondrina de mar Pincoya,Pincoya Storm-Petrel,Oceanites pincoyae,DD,,
+Oceanites gracilis,229,Procellariiformes,Oceanitidae,Golondrina de mar chica,Elliot's Storm-Petrel,Oceanites gracilis,DD,DD,RCE 14
+Garrodia nereis,230,Procellariiformes,Oceanitidae,Golondrina de mar subantártica,Gray-backed Storm-Petrel,Garrodia nereis,LC,,
+Pelagodroma marina,231,Procellariiformes,Oceanitidae,Golondrina de mar de cara blanca,White-faced Storm-Petrel,Pelagodroma marina,LC,,
+Hydrobates tethys,232,Procellariiformes,Hydrobatidae,Golondrina de mar peruana,Wedge-rumped Storm-Petrel,Hydrobates tethys,LC,VU,RCE 16
+Hydrobates markhami,233,Procellariiformes,Hydrobatidae,Golondrina de mar negra,Markham's Storm-Petrel,Hydrobates markhami,NT,EN,RCE 14
+Hydrobates hornbyi,234,Procellariiformes,Hydrobatidae,Golondrina de mar de collar,Hornby's Storm-Petrel,Hydrobates hornbyi,NT,VU,RCE 16
+Macronectes giganteus,235,Procellariiformes,Procellariidae,Petrel gigante antártico,Southern Giant-Petrel,Macronectes giganteus,LC,VU,RCE 15
+Macronectes halli,236,Procellariiformes,Procellariidae,Petrel gigante subantártico,Northern Giant-Petrel,Macronectes halli,LC,,
+Fulmarus glacialis,237,Procellariiformes,Procellariidae,Petrel plateado boreal,Northern Fulmar,Fulmarus glacialis,LC,,
+Fulmarus glacialoides,238,Procellariiformes,Procellariidae,Petrel plateado,Southern Fulmar,Fulmarus glacialoides,LC,,
+Thalassoica antarctica,239,Procellariiformes,Procellariidae,Petrel antártico,Antarctic Petrel,Thalassoica antarctica,LC,,
+Daption capense,240,Procellariiformes,Procellariidae,Petrel damero,Cape Petrel,Daption capense,LC,,
+Aphrodroma brevirostris,241,Procellariiformes,Procellariidae,Petrel de Kerguelen,Kerguelen Petrel,Aphrodroma brevirostris,LC,,
+Pterodroma leucoptera,242,Procellariiformes,Procellariidae,Petrel de Gould,Gould's Petrel,Pterodroma leucoptera,VU,,
+Pterodroma gouldi,243,Procellariiformes,Procellariidae,Petrel de cara gris,Gray-faced Petrel,Pterodroma gouldi,LC,,
+Pterodroma mollis,244,Procellariiformes,Procellariidae,Petrel de collar gris,Soft-plumaged Petrel,Pterodroma mollis,LC,,
+Pterodroma cookii,245,Procellariiformes,Procellariidae,Petrel de Cook,Cook's Petrel,Pterodroma cookii,VU,VU,RCE 14
+Pterodroma nigripennis,246,Procellariiformes,Procellariidae,Petrel de alas negras,Black-winged Petrel,Pterodroma nigripennis,LC,,
+Pterodroma defilippiana,247,Procellariiformes,Procellariidae,Petrel de Masatierra,Masatierra Petrel,Pterodroma defilippiana,VU,VU,RCE 4
+Pterodroma longirostris,248,Procellariiformes,Procellariidae,Petrel de Masafuera,Stejneger's Petrel,Pterodroma longirostris,VU,EN,RCE 4
+Pterodroma alba,249,Procellariiformes,Procellariidae,Petrel de Fénix,Phoenix Petrel,Pterodroma alba,VU,,
+Pterodroma atrata,250,Procellariiformes,Procellariidae,Petrel de Henderson,Henderson Petrel,Pterodroma atrata,EN,,
+Pterodroma ultima,251,Procellariiformes,Procellariidae,Petrel de Murphy,Murphy's Petrel,Pterodroma ultima,LC,,
+Pterodroma heraldica,252,Procellariiformes,Procellariidae,Petrel de Herald,Herald Petrel,Pterodroma heraldica,LC,,
+Pterodroma neglecta,253,Procellariiformes,Procellariidae,Petrel de Kermadec,Kermadec Petrel,Pterodroma neglecta,LC,EN,RCE 4
+Pterodroma externa,254,Procellariiformes,Procellariidae,Petrel de Juan Fernández,Juan Fernandez Petrel,Pterodroma externa,VU,EN,RCE 4
+Halobaena caerulea,255,Procellariiformes,Procellariidae,Petrel azulado,Blue Petrel,Halobaena caerulea,LC,,
+Pachyptila vittata,256,Procellariiformes,Procellariidae,Petrel-paloma de pico ancho,Broad-billed Prion,Pachyptila vittata,LC,,
+Pachyptila desolata,257,Procellariiformes,Procellariidae,Petrel-paloma antártico,Antarctic Prion,Pachyptila desolata,LC,,
+Pachyptila belcheri,258,Procellariiformes,Procellariidae,Petrel-paloma de pico delgado,Slender-billed Prion,Pachyptila belcheri,LC,,
+Procellaria cinerea,259,Procellariiformes,Procellariidae,Petrel gris,Gray Petrel,Procellaria cinerea,NT,,
+Procellaria aequinoctialis,260,Procellariiformes,Procellariidae,Petrel de barba blanca,White-chinned Petrel,Procellaria aequinoctialis,VU,,
+Procellaria parkinsoni,261,Procellariiformes,Procellariidae,Petrel de Parkinson,Parkinson's Petrel,Procellaria parkinsoni,VU,,
+Procellaria westlandica,262,Procellariiformes,Procellariidae,Petrel de Westland,Westland Petrel,Procellaria westlandica,EN,,
+Ardenna pacifica,263,Procellariiformes,Procellariidae,Fardela del Pacífico,Wedge-tailed Shearwater,Ardenna pacifica,LC,,
+Ardenna bulleri,264,Procellariiformes,Procellariidae,Fardela de dorso gris,Buller's Shearwater,Ardenna bulleri,VU,,
+Ardenna grisea,265,Procellariiformes,Procellariidae,Fardela negra,Sooty Shearwater,Ardenna grisea,NT,NT,RCE 15
+Ardenna gravis,266,Procellariiformes,Procellariidae,Fardela capirotada,Great Shearwater,Ardenna gravis,LC,,
+Ardenna creatopus,267,Procellariiformes,Procellariidae,Fardela blanca,Pink-footed Shearwater,Ardenna creatopus,VU,EN,RCE 2
+Ardenna carneipes,268,Procellariiformes,Procellariidae,Fardela de patas pálidas,Flesh-footed Shearwater,Ardenna carneipes,NT,,
+Puffinus nativitatis,269,Procellariiformes,Procellariidae,Fardela de Pascua,Christmas Shearwater,Puffinus nativitatis,LC,VU,RCE 14
+Puffinus puffinus,270,Procellariiformes,Procellariidae,Fardela atlántica,Manx Shearwater,Puffinus puffinus,LC,,
+Puffinus assimilis,271,Procellariiformes,Procellariidae,Fardela chica,Little Shearwater,Puffinus assimilis,LC,,
+Puffinus bailloni / myrtae,272,Procellariiformes,Procellariidae,Fardela tropical / de Rapa,Tropical / Rapa Shearwater,Puffinus bailloni / myrtae,,,
+Pelecanoides garnotii,273,Procellariiformes,Procellariidae,Yunco de Humboldt,Peruvian Diving-Petrel,Pelecanoides garnotii,NT,EN,RCE 14
+Pelecanoides urinatrix,274,Procellariiformes,Procellariidae,Yunco de los canales,Common Diving-Petrel,Pelecanoides urinatrix,LC,,
+Pelecanoides magellani,275,Procellariiformes,Procellariidae,Yunco de Magallanes,Magellanic Diving-Petrel,Pelecanoides magellani,LC,,
+Ciconia maguari,276,Ciconiiformes,Ciconiidae,Pillo,Maguari Stork,Ciconia maguari,LC,,
+Mycteria americana,277,Ciconiiformes,Ciconiidae,Cigüeña de cabeza pelada,Wood Stork,Mycteria americana,LC,,
+Fregata magnificens,278,Suliformes,Fregatidae,Ave fragata magnífica,Magnificent Frigatebird,Fregata magnificens,LC,,
+Fregata minor,279,Suliformes,Fregatidae,Ave fragata grande,Great Frigatebird,Fregata minor,LC,VU,RCE 14
+Sula nebouxii,280,Suliformes,Sulidae,Piquero de patas azules,Blue-footed Booby,Sula nebouxii,LC,,
+Sula variegata,281,Suliformes,Sulidae,Piquero de Humboldt,Peruvian Booby,Sula variegata,LC,LC,RCE 14
+Sula dactylatra,282,Suliformes,Sulidae,Piquero blanco,Masked Booby,Sula dactylatra,LC,,
+Sula granti,283,Suliformes,Sulidae,Piquero de Nazca,Nazca Booby,Sula granti,LC,,
+Sula sula,284,Suliformes,Sulidae,Piquero de patas rojas,Red-footed Booby,Sula sula,LC,,
+Sula leucogaster,285,Suliformes,Sulidae,Piquero café,Brown Booby,Sula leucogaster,LC,,
+Poikilocarbo gaimardi,286,Suliformes,Phalacrocoracidae,Lile,Red-legged Cormorant,Poikilocarbo gaimardi,NT,NT,RCE 14
+Nannopterum brasilianum,287,Suliformes,Phalacrocoracidae,Yeco,Neotropic Cormorant,Nannopterum brasilianus,LC,,
+Leucocarbo magellanicus,288,Suliformes,Phalacrocoracidae,Cormorán de las rocas,Magellanic Cormorant,Leucocarbo magellanicus,LC,,
+Leucocarbo bougainvilliorum,289,Suliformes,Phalacrocoracidae,Guanay,Guanay Cormorant,Leucocarbo bougainvilliorum,NT,NT,RCE 14
+Leucocarbo atriceps,290,Suliformes,Phalacrocoracidae,Cormorán imperial,Imperial Cormorant,Leucocarbo atriceps,LC,,
+Pelecanus occidentalis,291,Pelecaniformes,Pelecanidae,Pelícano pardo,Brown Pelican,Pelecanus occidentalis,LC,,
+Pelecanus thagus,292,Pelecaniformes,Pelecanidae,Pelícano de Humboldt,Peruvian Pelican,Pelecanus thagus,NT,NT,RCE 15
+Ixobrychus exilis,293,Pelecaniformes,Ardeidae,Huairavillo de dorso negro,Least Bittern,Ixobrychus exilis,LC,,
+Ixobrychus involucris,294,Pelecaniformes,Ardeidae,Huairavillo común,Stripe-backed Bittern,Ixobrychus involucris,LC,LC,RCE 12
+Nycticorax nycticorax,295,Pelecaniformes,Ardeidae,Huairavo común,Black-crowned Night-Heron,Nycticorax nycticorax,LC,,
+Nyctanassa violacea,296,Pelecaniformes,Ardeidae,Huairavo de corona amarilla,Yellow-crowned Night-Heron,Nyctanassa violacea,LC,,
+Butorides striata,297,Pelecaniformes,Ardeidae,Garcita azulada,Striated Heron,Butorides striata,LC,,
+Bubulcus ibis,298,Pelecaniformes,Ardeidae,Garza bueyera,Cattle Egret,Bubulcus ibis,LC,,
+Ardea cocoi,299,Pelecaniformes,Ardeidae,Garza cuca,Cocoi Heron,Ardea cocoi,LC,LC,RCE 12
+Ardea alba,300,Pelecaniformes,Ardeidae,Garza grande,Great Egret,Ardea alba,LC,,
+Syrigma sibilatrix,301,Pelecaniformes,Ardeidae,Garza chiflón,Whistling Heron,Syrigma sibilatrix,LC,,
+Egretta tricolor,302,Pelecaniformes,Ardeidae,Garza tricolor,Tricolored Heron,Egretta tricolor,LC,,
+Egretta thula,303,Pelecaniformes,Ardeidae,Garza chica,Snowy Egret,Egretta thula,LC,,
+Egretta caerulea,304,Pelecaniformes,Ardeidae,Garza azul,Little Blue Heron,Egretta caerulea,LC,,
+Plegadis chihi,305,Pelecaniformes,Threskiornithidae,Cuervo de pantano común,White-faced Ibis,Plegadis chihi,LC,NT,RCE 16
+Plegadis ridgwayi,306,Pelecaniformes,Threskiornithidae,Cuervo de pantano de la puna,Puna Ibis,Plegadis ridgwayi,LC,NT,RCE 9
+Phimosus infuscatus,307,Pelecaniformes,Threskiornithidae,Cuervo de pantano de cara pelada,Bare-faced Ibis,Phimosus infuscatus,LC,,
+Theristicus branickii,308,Pelecaniformes,Threskiornithidae,Bandurria de la puna,Andean Ibis,Theristicus branickii,NT,EN,RCE 13
+Theristicus melanopis,309,Pelecaniformes,Threskiornithidae,Bandurria común,Black-faced Ibis,Theristicus melanopis,LC,LC,RCE 13
+Platalea ajaja,310,Pelecaniformes,Threskiornithidae,Espátula,Roseate Spoonbill,Platalea ajaja,LC,,
+Vultur gryphus,311,Cathartiformes,Cathartidae,Cóndor,Andean Condor,Vultur gryphus,VU,NT,RCE 15
+Coragyps atratus,312,Cathartiformes,Cathartidae,Jote de cabeza negra,Black Vulture,Coragyps atratus,LC,,
+Cathartes aura,313,Cathartiformes,Cathartidae,Jote de cabeza colorada,Turkey Vulture,Cathartes aura,LC,,
+Pandion haliaetus,314,Accipitriformes,Pandionidae,Águila pescadora,Osprey,Pandion haliaetus,LC,LC,RCE 15
+Elanus leucurus,315,Accipitriformes,Accipitridae,Bailarín,White-tailed Kite,Elanus leucurus,LC,,
+Circus cinereus,316,Accipitriformes,Accipitridae,Vari ceniciento,Cinereous Harrier,Circus cinereus,LC,,
+Circus buffoni,317,Accipitriformes,Accipitridae,Vari huevetero,Long-winged Harrier,Circus buffoni,LC,,
+Accipiter bicolor,318,Accipitriformes,Accipitridae,Peuquito,Bicolored Hawk,Accipiter bicolor,LC,LC,RCE 16
+Rupornis magnirostris,319,Accipitriformes,Accipitridae,Taguató,Roadside Hawk,Rupornis magnirostris,LC,,
+Parabuteo unicinctus,320,Accipitriformes,Accipitridae,Peuco,Harris's Hawk,Parabuteo unicinctus,LC,,
+Geranoaetus polyosoma,321,Accipitriformes,Accipitridae,Aguilucho común,Variable Hawk,Geranoaetus polyosoma,LC,,
+Geranoaetus melanoleucus,322,Accipitriformes,Accipitridae,Águila,Black-chested Buzzard-Eagle,Geranoaetus melanoleucus,LC,,
+Buteo albigula,323,Accipitriformes,Accipitridae,Aguilucho chico,White-throated Hawk,Buteo albigula,LC,NT,RCE 16
+Buteo swainsoni,324,Accipitriformes,Accipitridae,Aguilucho langostero,Swainson's Hawk,Buteo swainsoni,LC,,
+Buteo ventralis,325,Accipitriformes,Accipitridae,Aguilucho de cola rojiza,Rufous-tailed Hawk,Buteo ventralis,VU,VU,RCE 15
+Tyto alba,326,Strigiformes,Tytonidae,Lechuza,Barn Owl,Tyto alba,LC,,
+Bubo virginianus,327,Strigiformes,Strigidae,Tucúquere,Great Horned Owl,Bubo virginianus,LC,,
+Strix rufipes,328,Strigiformes,Strigidae,Concón,Rufous-legged Owl,Strix rufipes,LC,NT,RCE 12
+Glaucidium peruanum,329,Strigiformes,Strigidae,Chuncho del norte,Peruvian Pygmy-Owl,Glaucidium peruanum,LC,,
+Glaucidium nana,330,Strigiformes,Strigidae,Chuncho austral,Austral Pygmy-Owl,Glaucidium nana,LC,,
+Athene cunicularia,331,Strigiformes,Strigidae,Pequén,Burrowing Owl,Athene cunicularia,LC,,
+Asio flammeus,332,Strigiformes,Strigidae,Nuco,Short-eared Owl,Asio flammeus,LC,LC,RCE 12
+Megaceryle torquata,333,Coraciiformes,Alcedinidae,Martín pescador,Ringed Kingfisher,Megaceryle torquata,LC,,
+Chloroceryle americana,334,Coraciiformes,Alcedinidae,Martín pescador chico,Green Kingfisher,Chloroceryle americana,LC,,
+Dryobates lignarius,335,Piciformes,Picidae,Carpinterito,Striped Woodpecker,Veniliornis lignarius,LC,,
+Campephilus magellanicus,336,Piciformes,Picidae,Carpintero negro,Magellanic Woodpecker,Campephilus magellanicus,LC,NT,RCE 16
+Colaptes pitius,337,Piciformes,Picidae,Pitio austral,Chilean Flicker,Colaptes pitius,LC,,
+Colaptes rupicola,338,Piciformes,Picidae,Pitio del norte,Andean Flicker,Colaptes rupicola,LC,,
+Caracara plancus,339,Falconiformes,Falconidae,Traro,Crested Caracara,Caracara plancus,LC,,
+Phalcoboenus megalopterus,340,Falconiformes,Falconidae,Carancho cordillerano,Mountain Caracara,Phalcoboenus megalopterus,LC,,
+Phalcoboenus albogularis,341,Falconiformes,Falconidae,Carancho de garganta blanca,White-throated Caracara,Phalcoboenus albogularis,LC,,
+Phalcoboenus australis,342,Falconiformes,Falconidae,Carancho negro,Striated Caracara,Phalcoboenus australis,NT,,
+Daptrius chimango,343,Falconiformes,Falconidae,Tiuque,Chimango Caracara,Phalcoboenus chimango,LC,,
+Falco sparverius,344,Falconiformes,Falconidae,Cernícalo,American Kestrel,Falco sparverius,LC,,
+Falco deiroleucus,345,Falconiformes,Falconidae,Halcón de pecho naranja,Orange-breasted Falcon,Falco deiroleucus,NT,,
+Falco femoralis,346,Falconiformes,Falconidae,Halcón perdiguero,Aplomado Falcon,Falco femoralis,LC,,
+Falco peregrinus,347,Falconiformes,Falconidae,Halcón peregrino,Peregrine Falcon,Falco peregrinus,LC,LC,RCE 13
+Psilopsiagon aurifrons,348,Psittaciformes,Psittacidae,Perico cordillerano,Mountain Parakeet,Psilopsiagon aurifrons,LC,LC,RCE 16
+Myiopsitta monachus,349,Psittaciformes,Psittacidae,Cotorra,Monk Parakeet,Myiopsitta monachus,LC,,
+Enicognathus ferrugineus,350,Psittaciformes,Psittacidae,Cachaña,Austral Parakeet,Enicognathus ferrugineus,LC,,
+Enicognathus leptorhynchus,351,Psittaciformes,Psittacidae,Choroy,Slender-billed Parakeet,Enicognathus leptorhynchus,LC,LC,RCE 14
+Cyanoliseus patagonus,352,Psittaciformes,Psittacidae,Tricahue,Burrowing Parakeet,Cyanoliseus patagonus,LC,"EN(III-IV), VU(resto distribuci√≥n)",RCE 1
+Pteroptochos castaneus,353,Passeriformes,Rhinocryptidae,Hued-hued casta√±o,Chestnut-throated Huet-huet,Pteroptochos castaneus,LC,,
+Pteroptochos tarnii,354,Passeriformes,Rhinocryptidae,Hued-hued del sur,Black-throated Huet-huet,Pteroptochos tarnii,LC,LC,RCE 14
+Pteroptochos megapodius,355,Passeriformes,Rhinocryptidae,Turca,Moustached Turca,Pteroptochos megapodius,LC,,
+Scelorchilus albicollis,356,Passeriformes,Rhinocryptidae,Tapaculo,White-throated Tapaculo,Scelorchilus albicollis,LC,,
+Scelorchilus rubecula,357,Passeriformes,Rhinocryptidae,Chucao,Chucao Tapaculo,Scelorchilus rubecula,LC,LC,RCE 14
+Eugralla paradoxa,358,Passeriformes,Rhinocryptidae,Churrín de la mocha,Ochre-flanked Tapaculo,Eugralla paradoxa,LC,,
+Scytalopus magellanicus,359,Passeriformes,Rhinocryptidae,Churrín del sur,Magellanic Tapaculo,Scytalopus magellanicus,LC,,
+Scytalopus fuscus,360,Passeriformes,Rhinocryptidae,Churrín del norte,Dusky Tapaculo,Scytalopus fuscus,LC,,
+Geositta cunicularia,361,Passeriformes,Furnariidae,Minero común,Common Miner,Geositta cunicularia,LC,,
+Geositta punensis,362,Passeriformes,Furnariidae,Minero de la puna,Puna Miner,Geositta punensis,LC,,
+Geositta rufipennis,363,Passeriformes,Furnariidae,Minero cordillerano,Rufous-banded Miner,Geositta rufipennis,LC,,
+Geositta maritima,364,Passeriformes,Furnariidae,Minero chico,Grayish Miner,Geositta maritima,LC,,
+Geositta antarctica,365,Passeriformes,Furnariidae,Minero austral,Short-billed Miner,Geositta antarctica,LC,,
+Geositta isabellina,366,Passeriformes,Furnariidae,Minero grande,Creamy-rumped Miner,Geositta isabellina,LC,,
+Pygarrhichas albogularis,367,Passeriformes,Furnariidae,Comesebo grande,White-throated Treerunner,Pygarrhichas albogularis,LC,,
+Ochetorhynchus andaecola,368,Passeriformes,Furnariidae,Bandurrilla de las piedras,Rock Earthcreeper,Ochetorhynchus andaecola,LC,,
+Ochetorhynchus ruficaudus,369,Passeriformes,Furnariidae,Bandurrilla de pico recto,Straight-billed Earthcreeper,Ochetorhynchus ruficaudus,LC,,
+Ochetorhynchus phoenicurus,370,Passeriformes,Furnariidae,Patagón,Band-tailed Earthcreeper,Ochetorhynchus phoenicurus,LC,,
+Ochetorhynchus melanurus,371,Passeriformes,Furnariidae,Chiricoca,Crag Chilia,Ochetorhynchus melanurus,LC,,
+Phleocryptes melanops,372,Passeriformes,Furnariidae,Trabajador,Wren-like Rushbird,Phleocryptes melanops,LC,,
+Upucerthia saturatior,373,Passeriformes,Furnariidae,Bandurrilla de los bosques,Patagonian Forest Earthcreeper,Upucerthia saturatior,LC,,
+Upucerthia dumetaria,374,Passeriformes,Furnariidae,Bandurrilla común,Scale-throated Earthcreeper,Upucerthia dumetaria,LC,,
+Upucerthia albigula,375,Passeriformes,Furnariidae,Bandurrilla de Arica,White-throated Earthcreeper,Upucerthia albigula,LC,,
+Upucerthia validirostris,376,Passeriformes,Furnariidae,Bandurrilla de la puna,Buff-breasted Earthcreeper,Upucerthia validirostris,LC,,
+Cinclodes fuscus,377,Passeriformes,Furnariidae,Churrete acanelado,Buff-winged Cinclodes,Cinclodes fuscus,LC,,
+Cinclodes antarcticus,378,Passeriformes,Furnariidae,Churrete austral,Blackish Cinclodes,Cinclodes antarcticus,NT,,
+Cinclodes albiventris,379,Passeriformes,Furnariidae,Churrete de alas crema,Cream-winged Cinclodes,Cinclodes albiventris,LC,,
+Cinclodes oustaleti,380,Passeriformes,Furnariidae,Churrete chico,Gray-flanked Cinclodes,Cinclodes oustaleti,LC,,
+Cinclodes atacamensis,381,Passeriformes,Furnariidae,Churrete de alas blancas,White-winged Cinclodes,Cinclodes atacamensis,LC,,
+Cinclodes patagonicus,382,Passeriformes,Furnariidae,Churrete patagónico,Dark-bellied Cinclodes,Cinclodes patagonicus,LC,,
+Cinclodes nigrofumosus,383,Passeriformes,Furnariidae,Churrete costero,Seaside Cinclodes,Cinclodes nigrofumosus,LC,,
+Aphrastura spinicauda,384,Passeriformes,Furnariidae,Rayadito,Thorn-tailed Rayadito,Aphrastura spinicauda,LC,,
+Aphrastura masafuerae,385,Passeriformes,Furnariidae,Rayadito de Masafuera,Masafuera Rayadito,Aphrastura masafucrae,CR,CR,RCE 15
+Sylviorthorhynchus desmursii,386,Passeriformes,Furnariidae,Colilarga,Des Murs's Wiretail,Sylviorthorhynchus desmurii,LC,,
+Leptasthenura aegithaloides,387,Passeriformes,Furnariidae,Tijeral común,Plain-mantled Tit-Spinetail,Leptasthenura aegithaloides,LC,,
+Leptasthenura striata,388,Passeriformes,Furnariidae,Tijeral listado,Streaked Tit-Spinetail,Leptasthenura striata,LC,,
+Asthenes dorbignyi,389,Passeriformes,Furnariidae,Canastero del norte,Creamy-breasted Canastero,Asthenes dorbignyi,LC,,
+Asthenes anthoides,390,Passeriformes,Furnariidae,Canastero del sur,Austral Canastero,Asthenes anthoides,LC,,
+Asthenes modesta,391,Passeriformes,Furnariidae,Canstero chico,Cordilleran Canastero,Asthenes modesta,LC,,
+Asthenes pyrrholeuca,392,Passeriformes,Furnariidae,Canastero de cola larga,Sharp-billed Canastero,Asthenes pyrrholeuca,LC,,
+Asthenes pudibunda,393,Passeriformes,Furnariidae,Canastero de las quebradas,Canyon Canastero,Asthenes pudibunda,LC,,
+Pseudasthenes humicola,394,Passeriformes,Furnariidae,Canastero chileno,Dusky-tailed Canastero,Pseudasthenes humicola,LC,,
+Phytotoma rutila,395,Passeriformes,Cotingidae,Cortarramas,White-tipped Plantcutter,Phytotoma rutila,LC,,
+Phytotoma rara,396,Passeriformes,Cotingidae,Rara,Rufous-tailed Plantcutter,Phytotoma rara,LC,,
+Elaenia albiceps,397,Passeriformes,Tyrannidae,Fío-fío,White-crested Elaenia,Elaenia albiceps,LC,,
+Anairetes reguloides,398,Passeriformes,Tyrannidae,Cachudito de cresta blanca,Pied-crested Tit-Tyrant,Anairetes reguloides,LC,EN,RCE 16
+Anairetes flavirostris,399,Passeriformes,Tyrannidae,Cachudito del norte,Yellow-billed Tit-Tyrant,Anairetes flavirostris,LC,,
+Anairetes parulus,400,Passeriformes,Tyrannidae,Cachudito común,Tufted Tit-Tyrant,Anairetes parulus,LC,,
+Anairetes fernandezianus,401,Passeriformes,Tyrannidae,Cachudito de Juan Fernández,Juan Fernandez Tit-Tyrant,Anairetes fernandezianus,NT,EN-R,RCE 1
+Pseudocolopteryx citreola,402,Passeriformes,Tyrannidae,Pájaro amarillo,Ticking Doradito,Pseudocolopteryx citreola,LC,NT,RCE 15
+Muscigralla brevicauda,403,Passeriformes,Tyrannidae,Cazamoscas de cola corta,Short-tailed Field Tyrant,Muscigralla brevicauda,LC,,
+Pitangus sulphuratus,404,Passeriformes,Tyrannidae,Benteveo,Great Kiskadee,Pitangus sulphuratus,LC,,
+Megarynchus pitangua,405,Passeriformes,Tyrannidae,Pitanguá,Boat-billed Flycatcher,Megarynchus pitangua,LC,,
+Machetornis rixosa,406,Passeriformes,Tyrannidae,Picabuey,Cattle Tyrant,Machetornis rixosa,LC,,
+Myiodynastes luteiventris,407,Passeriformes,Tyrannidae,Benteveo de vientre azufre,Sulphur-bellied Flycatcher,Myiodynastes luteiventris,LC,,
+Myiodynastes maculatus,408,Passeriformes,Tyrannidae,Benteveo rayado,Streaked Flycatcher,Myiodynastes maculatus,LC,,
+Empidonomus aurantioatrocristatus,409,Passeriformes,Tyrannidae,Tuquito gris,Crowned Slaty Flycatcher,Griseotyrannus aurantioatrocristatus,LC,,
+Tyrannus melancholicus,410,Passeriformes,Tyrannidae,Suirirí real,Tropical Kingbird,Tyrannus melancholicus,LC,,
+Tyrannus savana,411,Passeriformes,Tyrannidae,Cazamoscas tijereta,Fork-tailed Flycatcher,Tyrannus savana,LC,,
+Tyrannus tyrannus,412,Passeriformes,Tyrannidae,Suirirí boreal,Eastern Kingbird,Tyrannus tyrannus,LC,,
+Casiornis rufus,413,Passeriformes,Tyrannidae,Burlisto castaño,Rufous Casiornis,Casiornis rufus,LC,,
+Myiophobus fasciatus,414,Passeriformes,Tyrannidae,Cazamoscas de pico chato,Bran-colored Flycatcher,Myiophobus fasciatus,LC,,
+Colorhamphus parvirostris,415,Passeriformes,Tyrannidae,Viudita,Patagonian Tyrant,Colorhamphus parvirostris,LC,,
+Ochthoeca oenanthoides,416,Passeriformes,Tyrannidae,Pitajo rojizo,d'Orbigny's Chat-Tyrant,Ochthoeca oenanthoides,LC,,
+Ochthoeca leucophrys,417,Passeriformes,Tyrannidae,Pitajo gris,White-browed Chat-Tyrant,Ochthoeca leucophrys,LC,,
+Pyrocephalus rubinus,418,Passeriformes,Tyrannidae,Saca-tu-real,Vermilion Flycatcher,Pyrocephalus rubinus,LC,,
+Lessonia rufa,419,Passeriformes,Tyrannidae,Colegial austral,Austral Negrito,Lessonia rufa,LC,,
+Lessonia oreas,420,Passeriformes,Tyrannidae,Colegial del norte,Andean Negrito,Lessonia oreas,LC,,
+Hymenops perspicillatus,421,Passeriformes,Tyrannidae,Run-run,Spectacled Tyrant,Hymenops perspicillatus,LC,,
+Muscisaxicola maculirostris,422,Passeriformes,Tyrannidae,Dormilona chica,Spot-billed Ground-Tyrant,Muscisaxicola maculirostris,LC,,
+Muscisaxicola juninensis,423,Passeriformes,Tyrannidae,Dormilona de la puna,Puna Ground-Tyrant,Muscisaxicola juninensis,LC,,
+Muscisaxicola cinereus,424,Passeriformes,Tyrannidae,Dormilona cenicienta,Cinereous Ground-Tyrant,Muscisaxicola cinereus,LC,,
+Muscisaxicola albifrons,425,Passeriformes,Tyrannidae,Dormilona gigante,White-fronted Ground-Tyrant,Muscisaxicola albifrons,LC,,
+Muscisaxicola flavinucha,426,Passeriformes,Tyrannidae,Dormilona fraile,Ochre-naped Ground-Tyrant,Muscisaxicola flavinucha,LC,,
+Muscisaxicola rufivertex,427,Passeriformes,Tyrannidae,Dormilona de nuca rojiza,Rufous-naped Ground-Tyrant,Muscisaxicola rufivertex,LC,,
+Muscisaxicola maclovianus,428,Passeriformes,Tyrannidae,Dormilona tontita,Dark-faced Ground-Tyrant,Muscisaxicola maclovianus,LC,,
+Muscisaxicola albilora,429,Passeriformes,Tyrannidae,Dormilona de ceja blanca,White-browed Ground-Tyrant,Muscisaxicola albilora,LC,,
+Muscisaxicola capistratus,430,Passeriformes,Tyrannidae,Dormilona rufa,Cinnamon-bellied Ground-Tyrant,Muscisaxicola capistratus,LC,,
+Muscisaxicola frontalis,431,Passeriformes,Tyrannidae,Dormilona de frente negra,Black-fronted Ground-Tyrant,Muscisaxicola frontalis,LC,,
+Cnemarchus rufipennis,432,Passeriformes,Tyrannidae,Birro gris,Rufous-webbed Bush-Tyrant,Polioxolmis rufipennis,LC,,
+Pyrope pyrope,433,Passeriformes,Tyrannidae,Diucón,Fire-eyed Diucon,Xolmis pyrope,LC,,
+Neoxolmis coronatus,434,Passeriformes,Tyrannidae,Monjita coronada,Black-crowned Monjita,Xolmis coronatus,LC,,
+Neoxolmis rubetra,435,Passeriformes,Tyrannidae,Monjita castaña,Rusty-backed Monjita,Xolmis rubetra,LC,,
+Agriornis montanus,436,Passeriformes,Tyrannidae,Mero gaucho,Black-billed Shrike-Tyrant,Agriornis montanus,LC,,
+Agriornis albicauda,437,Passeriformes,Tyrannidae,Mero de la puna,White-tailed Shrike-Tyrant,Agriornis albicauda,VU,VU,RCE 16
+Agriornis lividus,438,Passeriformes,Tyrannidae,Mero grande,Great Shrike-Tyrant,Agriornis lividus,LC,,
+Agriornis micropterus,439,Passeriformes,Tyrannidae,Mero de Tarapacá,Gray-bellied Shrike-Tyrant,Agriornis micropterus,LC,,
+Agriornis murinus,440,Passeriformes,Tyrannidae,Mero chico,Lesser Shrike-Tyrant,Agriornis murinus,LC,,
+Neoxolmis rufiventris,441,Passeriformes,Tyrannidae,Cazamoscas chocolate,Chocolate-vented Tyrant,Neoxolmis rufiventris,LC,LC,RCE 15
+Empidonax alnorum / trailli,442,Passeriformes,Tyrannidae,Mosqueta boreal / saucera,Alder / Willow Flycatcher,Empidonax alnorum / trailli,,,
+Contopus sordidulus,443,Passeriformes,Tyrannidae,Pibí occidental,Western Wood-Pewee,Contopus sordidulus,LC,,
+Tachuris rubrigastra,444,Passeriformes,Tyrannidae,Siete colores,Many-colored Rush Tyrant,Tachuris rubrigastra,LC,,
+Vireo olivaceus,445,Passeriformes,Vireonidae,Verderón de ojos rojos,Red-eyed Vireo,Vireo olivaceus,LC,,
+Vireo chivi,446,Passeriformes,Vireonidae,Chiví,Chivi Vireo,Vireo chivi,LC,,
+Pygochelidon cyanoleuca,447,Passeriformes,Hirundinidae,Golondrina de dorso negro,Blue-and-white Swallow,Pygochelidon cyanoleuca,LC,,
+Alopochelidon fucata,448,Passeriformes,Hirundinidae,Golondrina de cabeza rojiza,Tawny-headed Swallow,Alopochelidon fucata,LC,,
+Orochelidon andecola,449,Passeriformes,Hirundinidae,Golondrina de los riscos,Andean Swallow,Orochelidon andecola,LC,,
+Progne tapera,450,Passeriformes,Hirundinidae,Golondrina parda,Brown-chested Martin,Progne tapera,LC,,
+Progne chalybea,451,Passeriformes,Hirundinidae,Golondrina doméstica,Gray-breasted Martin,Progne chalybea,LC,,
+Progne elegans,452,Passeriformes,Hirundinidae,Golondrina negra,Southern Martin,Progne elegans,LC,,
+Progne murphyi,453,Passeriformes,Hirundinidae,Golondrina peruana,Peruvian Martin,Progne murphyi,NT,,
+Tachycineta leucopyga,454,Passeriformes,Hirundinidae,Golondrina chilena,Chilean Swallow,Tachycineta meyeni,LC,,
+Riparia riparia,455,Passeriformes,Hirundinidae,Golondrina barranquera,Bank Swallow,Riparia riparia,LC,,
+Hirundo rustica,456,Passeriformes,Hirundinidae,Golondrina bermeja,Barn Swallow,Hirundo rustica,LC,,
+Petrochelidon pyrrhonota,457,Passeriformes,Hirundinidae,Golondrina grande,Cliff Swallow,Petrochelidon pyrrhonota,LC,,
+Troglodytes aedon,458,Passeriformes,Troglodytidae,Chercán común,House Wren,Troglodytes aedon,LC,,
+Cistothorus platensis,459,Passeriformes,Troglodytidae,Chercán de las vegas,Grass Wren,Cistothorus platensis,LC,,
+Catharus fuscescens,460,Passeriformes,Turdidae,Zorzalito dorsirrojo,Veery,Catharus fuscescens,LC,,
+Catharus ustulatus,461,Passeriformes,Turdidae,Zorzalito de Swainson,Swainson's Thrush,Catharus ustulatus,LC,,
+Turdus falcklandii,462,Passeriformes,Turdidae,Zorzal patagónico,Austral Thrush,Turdus falcklandii,LC,,
+Turdus amaurochalinus,463,Passeriformes,Turdidae,Zorzal chalchalero,Creamy-bellied Thrush,Turdus amaurochalinus,LC,,
+Turdus chiguanco,464,Passeriformes,Turdidae,Zorzal negro,Chiguanco Thrush,Turdus chiguanco,LC,,
+Mimus thenca,465,Passeriformes,Mimidae,Tenca chilena,Chilean Mockingbird,Mimus thenca,LC,,
+Mimus patagonicus,466,Passeriformes,Mimidae,Tenca patagónica,Patagonian Mockingbird,Mimus patagonicus,LC,,
+Mimus saturninus,467,Passeriformes,Mimidae,Tenca calandria,Chalk-browed Mockingbird,Mimus saturninus,LC,,
+Mimus triurus,468,Passeriformes,Mimidae,Tenca de alas blancas,White-banded Mockingbird,Mimus triurus,LC,,
+Sturnus vulgaris,469,Passeriformes,Sturnidae,Estornino pinto,European Starling,Sturnus vulgaris,LC,,
+Passer domesticus,470,Passeriformes,Passeridae,Gorrión,House Sparrow,Passer domesticus,LC,,
+Anthus peruvianus,471,Passeriformes,Motacillidae,Bailarín chico peruano,Peruvian Pipit,Anthus peruvianus,LC,,
+Anthus correndera,472,Passeriformes,Motacillidae,Bailarín chico común,Correndera Pipit,Anthus correndera,LC,,
+Anthus hellmayri,473,Passeriformes,Motacillidae,Bailarín chico pálido,Hellmayr's Pipit,Anthus hellmayri,LC,,
+Spinus crassirostris,474,Passeriformes,Fringillidae,Jilguero grande,Thick-billed Siskin,Spinus crassirostris,LC,,
+Spinus magellanicus,475,Passeriformes,Fringillidae,Jilguero peruano,Hooded Siskin,Spinus magellanicus,LC,,
+Spinus atratus,476,Passeriformes,Fringillidae,Jilguero negro,Black Siskin,Spinus atratus,LC,,
+Spinus uropygialis,477,Passeriformes,Fringillidae,Jilguero cordillerano,Yellow-rumped Siskin,Spinus uropygialis,LC,,
+Spinus barbatus,478,Passeriformes,Fringillidae,Jilguero austral,Black-chinned Siskin,Spinus barbatus,LC,,
+Zonotrichia capensis,479,Passeriformes,Passerellidae,Chincol,Rufous-collared Sparrow,Zonotrichia capensis,LC,,
+Dolichonyx oryzivorus,480,Passeriformes,Icteridae,Charlatán,Bobolink,Dolichonyx oryzivorus,LC,,
+Leistes superciliaris,481,Passeriformes,Icteridae,Loica argentina,White-browed Meadowlark,Leistes superciliaris,LC,,
+Leistes bellicosus,482,Passeriformes,Icteridae,Loica peruana,Peruvian Meadowlark,Leistes bellicosus,LC,,
+Leistes loyca,483,Passeriformes,Icteridae,Loica común,Long-tailed Meadowlark,Leistes loyca,LC,,
+Icterus pyrrhopterus,484,Passeriformes,Icteridae,Turpial variable,Variable Oriole,Icterus pyrrhopterus,LC,,
+Icterus galbula,485,Passeriformes,Icteridae,Bolsero de Baltimore,Baltimore Oriole,Icterus galbula,LC,,
+Molothrus rufoaxillaris,486,Passeriformes,Icteridae,Mirlo de pico corto,Screaming Cowbird,Molothrus rufoaxillaris,LC,,
+Molothrus bonariensis,487,Passeriformes,Icteridae,Mirlo común,Shiny Cowbird,Molothrus bonariensis,LC,,
+Curaeus curaeus,488,Passeriformes,Icteridae,Tordo,Austral Blackbird,Curaeus curaeus,LC,,
+Agelasticus thilius,489,Passeriformes,Icteridae,Trile,Yellow-winged Blackbird,Agelasticus thilius,LC,,
+Parkesia noveboracensis,490,Passeriformes,Parulidae,Reinita acuática,Northern Waterthrush,Parkesia noveboracensis,LC,,
+Leiothlypis peregrina,491,Passeriformes,Parulidae,Reinita de Tennessee,Tennessee Warbler,Leiothlypis peregrina,LC,,
+Geothlypis aequinoctialis,492,Passeriformes,Parulidae,Arañero cara negra,Masked Yellowthroat,Geothlypis aequinoctialis,LC,,
+Setophaga ruticilla,493,Passeriformes,Parulidae,Candelita americana,American Redstart,Setophaga ruticilla,LC,,
+Setophaga pitiayumi,494,Passeriformes,Parulidae,Pitiayumí,Tropical Parula,Setophaga pitiayumi,LC,,
+Setophaga fusca,495,Passeriformes,Parulidae,Reinita de garganta naranja,Blackburnian Warbler,Setophaga fusca,LC,,
+Setophaga striata,496,Passeriformes,Parulidae,Monjita americana,Blackpoll Warbler,Setophaga striata,NT,,
+Setophaga virens,497,Passeriformes,Parulidae,Reinita de dorso verde,Black-throated Green Warbler,Setophaga virens,LC,,
+Cardellina canadensis,498,Passeriformes,Parulidae,Reinita de Canadá,Canada Warbler,Cardellina canadensis,LC,,
+Piranga rubra,499,Passeriformes,Cardinalidae,Piranga,Summer Tanager,Piranga rubra,LC,,
+Pheucticus aureoventris,500,Passeriformes,Cardinalidae,Rey del bosque,Black-backed Grosbeak,Pheucticus aureoventris,LC,,
+Conirostrum binghami,501,Passeriformes,Thraupidae,Comesebo gigante,Giant Conebill,Conirostrum binghami,NT,,
+Conirostrum tamarugense,502,Passeriformes,Thraupidae,Comesebo de los tamarugales,Tamarugo Conebill,Conirostrum tamarugense,LC,EN,RCE 15
+Conirostrum cinereum,503,Passeriformes,Thraupidae,Comesebo chico,Cinereous Conebill,Conirostrum cinereum,LC,,
+Sicalis lutea,504,Passeriformes,Thraupidae,Chirihue puneño,Puna Yellow-Finch,Sicalis lutea,LC,,
+Sicalis uropygialis,505,Passeriformes,Thraupidae,Chirihue cordillerano,Bright-rumped Yellow-Finch,Sicalis uropigyalis,LC,,
+Sicalis auriventris,506,Passeriformes,Thraupidae,Chirihue dorado,Greater Yellow-Finch,Sicalis auriventris,LC,,
+Sicalis olivascens,507,Passeriformes,Thraupidae,Chirihue verdoso,Greenish Yellow-Finch,Sicalis olivascens,LC,,
+Sicalis lebruni,508,Passeriformes,Thraupidae,Chirihue austral,Patagonian Yellow-Finch,Sicalis lebruni,LC,,
+Sicalis flaveola,509,Passeriformes,Thraupidae,Chirihue azafrán,Saffron Finch,Sicalis flaveola,LC,,
+Sicalis luteola,510,Passeriformes,Thraupidae,Chirihue común,Grassland Yellow-Finch,Sicalis luteola,LC,,
+Sicalis raimondii,511,Passeriformes,Thraupidae,Chirihue de Raimondi,Raimondi's Yellow-Finch,Sicalis raimondii,LC,,
+Phrygilus atriceps,512,Passeriformes,Thraupidae,Cometocino del norte,Black-hooded Sierra Finch,Phrygilus atriceps,LC,,
+Phrygilus gayi,513,Passeriformes,Thraupidae,Cometocino de Gay,Gray-hooded Sierra Finch,Phrygilus gayi,LC,,
+Phrygilus patagonicus,514,Passeriformes,Thraupidae,Cometocino patag√≥nico,Patagonian Sierra Finch,Phrygilus patagonicus,LC,,
+Rhopospina fruticeti,515,Passeriformes,Thraupidae,Yal com√∫n,Mourning Sierra Finch,Rhopospina fruticeti,LC,,
+Geospizopsis unicolor,516,Passeriformes,Thraupidae,Pájaro plomo,Plumbeous Sierra Finch,Geospizopsis unicolor,LC,,
+Geospizopsis plebejus,517,Passeriformes,Thraupidae,Plebeyo,Ash-breasted Sierra Finch,Geospizopsis plebejus,LC,,
+Rhopospina alaudina,518,Passeriformes,Thraupidae,Platero,Band-tailed Sierra Finch,Corydospiza alaudina,LC,,
+Idiopsar dorsalis,519,Passeriformes,Thraupidae,Cometocino de dorso castaño,Red-backed Sierra Finch,Ephippiospingus dorsalis,LC,,
+Idiopsar erythronotus,520,Passeriformes,Thraupidae,Cometocino de Arica,White-throated Sierra Finch,Ephippiospingus erythronotus,LC,,
+Idiopsar speculifer,521,Passeriformes,Thraupidae,Diuca de alas blancas,Glacier Finch,Chionodacryon speculiferum,LC,,
+Melanodera melanodera,522,Passeriformes,Thraupidae,Yal austral,White-bridled Finch,Melanodera melanodera,LC,,
+Melanodera xanthogramma,523,Passeriformes,Thraupidae,Yal cordillerano,Yellow-bridled Finch,Melanodera xanthogramma,LC,,
+Catamenia analis,524,Passeriformes,Thraupidae,Semillero,Band-tailed Seedeater,Catamenia analis,LC,,
+Diglossa brunneiventris,525,Passeriformes,Thraupidae,Comesebo negro,Black-throated Flowerpiercer,Diglossa brunneiventris,LC,,
+Volatinia jacarina,526,Passeriformes,Thraupidae,Negrillo,Blue-black Grassquit,Volatinia jacarina,LC,,
+Tersina viridis,527,Passeriformes,Thraupidae,Tersina,Swallow Tanager,Tersina viridis,LC,,
+Sporophila lineola,528,Passeriformes,Thraupidae,Corbatita overo,Lined Seedeater,Sporophila lineola,LC,,
+Sporophila telasco,529,Passeriformes,Thraupidae,Corbatita del norte,Chestnut-throated Seedeater,Sporophila telasco,LC,,
+Sporophila caerulescens,530,Passeriformes,Thraupidae,Corbatita de doble collar,Double-collared Seedeater,Sporophila caerulescens,LC,,
+Saltator aurantiirostris,531,Passeriformes,Thraupidae,Pepitero,Golden-billed Saltator,Saltator aurantiirostris,LC,,
+Xenospingus concolor,532,Passeriformes,Thraupidae,Pizarrita,Slender-billed Finch,Xenospingus concolor,NT,NT,RCE 17
+Microspingus torquatus,533,Passeriformes,Thraupidae,Monterita de collar,Ringed Warbling Finch,Microspingus pectoralis,LC,,
+Diuca diuca,534,Passeriformes,Thraupidae,Diuca común,Diuca Finch,Diuca diuca,LC,,
+Rauenia bonariensis,535,Passeriformes,Thraupidae,Naranjero,Blue-and-yellow Tanager,Pipraeidea bonariensis,LC,,
+Thraupis sayaca,536,Passeriformes,Thraupidae,Celestino,Sayaca Tanager,Tangara sayaca,LC,,
+Rhea pennata tarapacensis,"1,1",Rheiiformes,Rheidae,Suri,,Rhea tarapacensis,NT,VU,RCE 7
+Rhea pennata pennata,"1,2",Rheiiformes,Rheidae,Ñandú,,Rhea pennata,LC,"EN (XI), VU (XII)",RCE 14
+Diomedea epomophora sanfordi,"214,1",Procellariiformes,Diomedeidae,Albatros real del norte,,Diomedea sanfordi,EN,EN,RCE 17
+Diomedea epomophora epomophora,"214,2",Procellariiformes,Diomedeidae,Albatros real del sur,,Diomedea epomophora,VU,VU,RCE 17
+Diomedea exulans exulans,"215,1",Procellariiformes,Diomedeidae,Albatros errante,,Diomedea exulans,VU,VU,RCE 17
+Diomedea exulans antipodensis,"215,2",Procellariiformes,Diomedeidae,Albatros de las antípodas,,Diomedea antipodensis,EN,EN,RCE 17
+Geranoaetus polyosoma polyosoma,"321,1",Accipitriformes,Accipitridae,,Variable Hawk (Variable),,,,
+Geranoaetus polyosoma (Puna),"321,2",Accipitriformes,Accipitridae,Aguilucho de la puna,Variable Hawk (Puna),,,DD,RCE 16
+Geranoaetus polyosoma exsul,"321,3",Accipitriformes,Accipitridae,Aguilucho de masafuera,Variable Hawk (Juan Fernandez),,,CR,RCE 17
+Falco sparverius peruvianus,"344,1",Falconiformes,Falconidae,,,,,,
+Falco sparverius cinnamominus,"344,2",Falconiformes,Falconidae,,,,,,
+Falco sparverius fernandensis,"344,3",Falconiformes,Falconidae,,American Kestrel (Juan Fernandez),,,EN,RCE 4
+Cinclodes oustaleti oustaleti,"380,1",Passeriformes,Furnariidae,,,,,,
+Cinclodes oustaleti baeckstroemii,"380,2",Passeriformes,Furnariidae,Churrete chico de masafuera,,,,VU,RCE 4
+Cinclodes oustaleti hornensis,"380,3",Passeriformes,Furnariidae,,,,,,

@@ -1,0 +1,1101 @@
+---
+title: 'Taller: Fortalecimiento del capital humano y herramientas analíticas en torno
+  al monitoreo de aves playeras en Chile'
+author: "Red de Observadores de Aves y Vida Silvestre de Chile"
+output:
+  html_document: default
+  word_document: default
+  pdf_document: default
+---
+
+
+## Introducción
+
+Este análisis tiene como objetivo estimar abundancias poblacionales y tendencias en el tiempo de aves playeras en nueve sitios monitoreados por el Migratory Shorebirds Project (MSP), utilizando además bases de datos provenientes de dos esquemas de monitoreos adicionales, Censo Neotropical de Aves Acuáticas (CNAA) y Censo Costero de Aves Playeras (CCAP). 
+
+Para comenzar, debemos cargar las librerias que ocuparemos y los diferentes archivos con los que trabajaremos, para luego preparar las bases de datos de los diferentes esquemas de monitoreo. 
+En este flujo dejaremos como ejemplo la preparación de la base de datos de MSP. Las bases de datos de los otros dos esquemas de monitoreo están preparadas y cargadas en el repositorio (CCAPver.rda y CNAAver.rda). Estas están en el formato que se requiere para trabajar con el paquete spAbundance.
+
+```{r librerias y archivos}
+# Cargar librerias y archivos necesarios para el taller
+library(abind)
+library(corrplot)
+library(dplyr)
+library(ggforce)
+library(ggplot2)
+library(grid)
+library(gridExtra) 
+library(lubridate)
+library(MCMCvis)
+library(purrr)
+library(reshape2)
+library(scales)
+library(spAbundance)
+library(tidyr)
+library(writexl)
+
+
+# Cargar datos
+df <- read.csv("MSPabr2025.csv", header = TRUE) #Base de datos de MSP
+df.u <- read.csv('UnidadesMSP.csv') #Base de datos con el detalle de los sitios MSP
+df.a <- read.csv('AvesChile.csv') #Base de datos de las aves presentes en Chile
+
+load("CCAPver.rda") #Base de datos del Censo Costero de Aves Playeras preparado
+load("CNAAver.rda") #Base de datos del Censo Neotropical de Aves Acuáticas preparado
+
+# Revisión de los archivos cargados
+str(df)
+str(df.u)
+str(df.a)
+str(CCAPver)
+str(CNAAver)
+```
+
+## Preparación base de datos MSP
+
+Para este ejemplo, trabajaremos con los datos registrados durante los censos realizados en la temporada verano y comenzaremos por identificar los sitios con sus respectivas fechas de censos y especies observadas para determinar las ausencias.
+
+```{r preparación bd MSP}
+df$Date <- as.Date(df$Date) #Le damos formato de fecha a la columna Date
+
+# Seleccionar columnas relevantes y disminuir el tamaño de la base
+df <- df %>%
+  select(Sampling.Unit.Name, Start.Time, End.Time, Spp, Common.Name,
+         Scientific.Name, Count, Date)
+
+# Filtrar los registros de la temporada que trabajaremos 
+ds.ver <- df %>% filter(month(Date) <= 3 | month(Date) >= 12) 
+
+# Definir especies de verano
+especies.ver <- ds.ver %>% 
+  filter(Spp != "---") %>% 
+  select(Spp, Common.Name, Scientific.Name) %>%
+  distinct()
+
+# Identificar las filas con '---' en el código de la especie, son censos sin observaciones
+censos_sin_obs.ver <- ds.ver %>%
+  filter(Spp == "---")
+
+# Generar nuevas filas para censos sin observaciones
+nuevas_filas <- map_df(1:nrow(censos_sin_obs.ver), function(i) {
+  fila_actual <- censos_sin_obs.ver[i,]
+  
+  especies_observadas <- ds.ver %>%
+    filter(Sampling.Unit.Name == fila_actual$Sampling.Unit.Name & 
+             Spp != "---") %>%
+    select(Spp) %>%
+    distinct() %>%
+    left_join(especies.ver, by = "Spp")
+  
+  especies_observadas %>%
+    mutate(Count = 0,
+           Date = fila_actual$Date,
+           Sampling.Unit.Name = fila_actual$Sampling.Unit.Name,
+           Start.Time = fila_actual$Start.Time,
+           End.Time = fila_actual$End.Time,
+           SiteName = fila_actual$SiteName,
+           Researcher = fila_actual$Researcher,
+           Other.Observers.Count = fila_actual$Other.Observers.Count,
+           nresearcher = fila_actual$nresearcher,
+           Ha = fila_actual$Ha,
+           lha = fila_actual$lha)
+})
+
+# Combinar datos originales y nuevas filas
+ds.ver2 <- ds.ver %>%
+  filter(Spp != "---") %>%
+  bind_rows(nuevas_filas)
+
+# Añadir columna presencia/ausencia
+ds.ver2$presencia <- ifelse(ds.ver2$Count > 0, 1, 0)
+
+# combinaciones de especie y unidad de muestreo según observaciones
+combinaciones <- ds.ver2 %>%
+  select(Spp, Sampling.Unit.Name) %>%
+  distinct()
+
+# identificar fechas de censos en cada unidad de muestreo
+fechas.censos <- ds.ver2 %>%
+  select(Sampling.Unit.Name, Date) %>%
+  distinct()
+
+# combinar especies con fechas de censos para cada unidad de muestreo
+combinaciones_expandidas <- left_join(combinaciones, fechas.censos, by = "Sampling.Unit.Name", relationship = "many-to-many")
+
+# unión con datos originales para completar las ausencias
+ds.ver.compl <- left_join(combinaciones_expandidas, ds.ver2, by = c("Spp", "Sampling.Unit.Name", "Date"))%>%
+  replace_na(list(presencia = 0))
+
+# Corrección de valores asociados a `Date`:
+info_date <- ds.ver2 %>%
+  filter(!is.na(Start.Time) & !is.na(End.Time)) %>%
+  select(Sampling.Unit.Name, Date, Start.Time, End.Time) %>%
+  distinct()
+
+ds.ver.compl <- left_join(ds.ver.compl, info_date, by = c("Sampling.Unit.Name", "Date"))
+
+# Sobrescribimos las columnas originales con las columnas provenientes de info_date y luego las eliminamos
+ds.ver.compl$Start.Time.x <- ds.ver.compl$Start.Time.y
+ds.ver.compl$End.Time.x <- ds.ver.compl$End.Time.y
+ds.ver.compl <- ds.ver.compl %>% select(-Start.Time.y, -End.Time.y)
+
+# Corrección de valores asociados a `Spp`:
+info_spp <- ds.ver2 %>%
+  select(Spp, Common.Name, Scientific.Name) %>%
+  distinct()
+
+ds.ver.compl <- left_join(ds.ver.compl, info_spp, by = "Spp")
+
+# Sobrescribimos las columnas originales con las columnas provenientes de info_spp y luego las eliminamos
+ds.ver.compl$Common.Name.x <- ds.ver.compl$Common.Name.y
+ds.ver.compl$Scientific.Name.x <- ds.ver.compl$Scientific.Name.y
+ds.ver.compl <- ds.ver.compl %>% select(-Common.Name.y, -Scientific.Name.y)
+
+ds.ver.compl <- ds.ver.compl %>% 
+  rename_with(~ gsub("\\.x$", "", .x))
+
+# Registro único por especie, unidad de muestreo y fecha
+MSPver <- ds.ver.compl %>%
+  group_by(Spp, Sampling.Unit.Name, Date) %>%
+  summarise(across(everything(), first)) %>%
+  distinct()  
+
+# Reemplazar NA con 0 en la columna Count para las ausencias
+MSPver$Count <- replace_na(MSPver$Count, 0)
+
+MSPver <- MSPver %>%
+  select(Sampling.Unit.Name, Start.Time, End.Time, Spp, Common.Name,
+         Scientific.Name, Count, Date)
+
+MSPver <- left_join(MSPver, df.u, by = "Sampling.Unit.Name")
+
+# Añadir columna de año a los datos
+MSPver <- MSPver %>%
+  mutate(year = year(Date))
+
+# Crear la matriz binaria de réplicas y ordenar los años
+matriz_binaria <- MSPver %>%
+  group_by(Sampling.Unit.Name, year) %>%
+  summarise(replicas = n(), .groups = 'drop') %>%
+  pivot_wider(names_from = year, values_from = replicas, values_fill = 0) %>%
+  mutate(across(-Sampling.Unit.Name, ~ ifelse(. > 0, 1, 0)))
+
+# Obtener los nombres de las columnas y ordenar los años
+columnas_ordenadas <- c("Sampling.Unit.Name", sort(names(matriz_binaria)[-1]))
+
+# Reordenar las columnas
+matriz_binaria <- matriz_binaria %>%
+  select(all_of(columnas_ordenadas))
+
+# Función para verificar si hay al menos tres ceros en la fila
+tiene_una_replica <- function(x) {
+  sum(x == 0) >= 6
+}
+
+# Crear una tabla con las fechas por unidad de muestreo en cada año
+fechas_por_unidad <- MSPver %>%
+  group_by(Sampling.Unit.Name, year) %>%
+  summarise(fechas = list(as.character(unique(Date))), .groups = 'drop')
+
+MSPver <- MSPver %>%
+  select(SiteName, Sampling.Unit.Name, Spp,Scientific.Name, Count, Date, Longitude, 
+         Latitude, Ha)
+
+MSPver$Date <- as.Date(MSPver$Date, format = "%Y-%m-%d")
+
+# Durante el año 2020 y 2021 las fechas están corridas. Modificaremos para que las tempradas queden unificadas con las de los otros años
+# Modificar las fechas para el año 2021
+MSPver <- MSPver %>%
+  mutate(Date = case_when(
+    year(Date) == 2021 ~ as.Date("2021-02-15"),
+    TRUE ~ Date
+  ))
+
+# Modificar las fechas para dic 2020
+MSPver <- MSPver %>%
+  mutate(Date = case_when(
+    Date == "2020-12-15" ~ as.Date("2021-02-15"),
+    TRUE ~ Date
+  ))
+
+MSPver <- MSPver %>%
+  mutate(Date = ymd(Date), 
+         year = year(Date)) 
+
+# Para sitios con múltiples fechas en 2021, promediamos
+MSPver <- MSPver %>%
+  group_by(Sampling.Unit.Name, Spp, Date) %>%
+  summarise(
+    Count = round(mean(Count, na.rm = TRUE)),
+    year = first(year),
+    SiteName = first(SiteName),
+    Scientific.Name = first(Scientific.Name),
+    Spp = first(Spp),
+    .groups = "drop"
+  )
+
+MSPver$Count <- as.numeric(MSPver$Count)
+
+# Crear la columna "SitioAño" combinando la información de "SiteName" y "year"
+MSPver$SitioAño <- paste(MSPver$SiteName, MSPver$year, sep = ".")
+
+df.a <- df.a %>%
+  select(Scientific.Name, Orden.taxonómico)
+
+MSPver <- left_join(MSPver, df.a, by = "Scientific.Name")
+
+MSPver$Orden.taxonómico <- as.numeric(MSPver$Orden.taxonómico)
+
+#Sacar datos de Rocuant3 del año 2022, ya que solo hay información de esa unica unidad
+MSPver <- MSPver %>%
+  filter(!(Sampling.Unit.Name == "ROCUANT3" & year == 2022))
+
+## Ausencias HUGO Coquimbo (2022-2025)
+
+# Extraer una unidad de muestreo del sitio "Coquimbo" para saber qué info replicar
+unidad_ref <- MSPver %>%
+  filter(Sampling.Unit.Name == "COQ20") %>%
+  slice(1)
+
+# Crear las 4 filas para la especie HUGO con Count = 0
+nuevas_ausencias <- tibble(
+  SiteName = "Coquimbo",
+  Sampling.Unit.Name = unidad_ref$Sampling.Unit.Name,  # Usamos una unidad representativa
+  Spp = "HUGO",
+  Count = 0,
+  Date = as.Date(c("2022-02-14", "2023-02-15", "2024-02-15", "2025-02-08")),
+)
+
+# Agregar el año
+nuevas_ausencias <- nuevas_ausencias %>%
+  mutate(year = year(Date))
+
+# Agregar estas ausencias a MSPver
+MSPver <- bind_rows(MSPver, nuevas_ausencias)
+
+
+# Filtrar solo las especies de aves playeras
+MSPver <- MSPver %>%
+  filter(Orden.taxonómico >= 99 & Orden.taxonómico <= 161)
+
+#Sacamos de este análisis los sitios nuevos 2025
+MSPver <- MSPver %>%
+  filter(!is.na(SiteName))
+
+# Obtener la lista completa de "SitioAño",los años y especies
+all_UA <- unique(MSPver$SitioAño)
+all_years <- unique (MSPver$year)
+all_sp <- unique (MSPver$Scientific.Name)
+
+# Preparación de la base de datos MSP en el formato que pide spAbundance, a nivel de sitio
+MSPverSitios <- MSPver %>%
+  group_by(SitioAño, Scientific.Name, year) %>%
+  summarise(Count = sum(Count, na.rm = TRUE), .groups = 'drop')
+
+
+# Crear la matriz de conteo
+y <- matrix(NA, nrow = length(all_sp), ncol = length(all_UA))
+rownames(y) <- all_sp
+colnames(y) <- all_UA
+
+# Llenar la matriz con los valores de Count
+for (i in 1:nrow(MSPverSitios)) {
+  UA <- MSPverSitios$SitioAño[i]
+  sp <- MSPverSitios$Scientific.Name[i]     
+  count <- MSPverSitios$Count[i]
+  
+  row_index <- match(sp, all_sp)
+  col_index <- match(UA, all_UA)
+  
+  y[row_index, col_index ] <- count
+}
+
+media_year <- mean(MSPverSitios$year)
+desviacion_year <- sd(MSPverSitios$year)
+MSPverSitios$years <- (MSPverSitios$year - media_year) / desviacion_year
+
+
+# Crear la matriz de año
+año <- matrix(NA, nrow = length(all_UA), ncol = 1)
+rownames(año) <- all_UA
+colnames(año) <- "año"
+
+# Llenar la matriz con los valores de año
+for (i in 1:nrow(MSPverSitios)) {
+  UA <- MSPverSitios$SitioAño[i]
+  year_value <- MSPverSitios$year[i]  
+  
+  row_index <- match(UA, all_UA)
+  
+  año[row_index, ] <- year_value  
+}
+
+
+# Crear el objeto covs como una lista
+covs <- list(
+  "año" = año
+  )
+
+# Base de datos 
+MSPver <- list(y = y,
+            covs = covs)
+# Revisamos
+str(MSPver)
+
+
+save(MSPver, file = 'MSPver.rda')
+```
+
+## Preparación base de datos unificada 
+
+Ahora que tenemos preparadas las bases de datos con las que trabajaremos, debemos unificarlas y dejarlas en el formato que se necesita para trabajar con el paquete spAbundance.
+
+```{r preparación base de datos unificada}
+# Obtener nombres de las especies
+especies_CNAA <- rownames(CNAAver$y)
+especies_CCAP <- rownames(CCAPver$y)
+especies_MSP  <- rownames(MSPver$y)
+
+# Especies presente en los tres esquemas de monitoreo
+especies_comunes <- Reduce(intersect, list(especies_CNAA, especies_CCAP, especies_MSP))
+
+# Filtrar las matrices por especies comunes (filas)
+CNAAver$y <- CNAAver$y[especies_comunes, , drop = FALSE]
+CCAPver$y <- CCAPver$y[especies_comunes, , drop = FALSE]
+MSPver$y  <- MSPver$y[especies_comunes,  , drop = FALSE]
+
+all_rownames <- unique(c(rownames(CNAAver$y), 
+                         rownames(CCAPver$y), 
+                         rownames(MSPver$y)))
+
+# Expandir matrices para que tengan todas las filas
+expand_matrix <- function(mat, all_rownames) {
+  expanded_mat <- matrix(NA, nrow = length(all_rownames), ncol = ncol(mat), 
+                         dimnames = list(all_rownames, colnames(mat)))
+  expanded_mat[rownames(mat), colnames(mat)] <- mat
+  return(expanded_mat)
+}
+
+CNAA_y <- expand_matrix(CNAAver$y, all_rownames)
+CCAP_y <- expand_matrix(CCAPver$y, all_rownames)
+MSP_y  <- expand_matrix(MSPver$y,  all_rownames)
+
+# Obtener todos los sitio.año 
+all_colnames <- unique(c(colnames(CNAA_y), colnames(CCAP_y), colnames(MSP_y)))
+
+# Expandir columnas para que todas las matrices tengan todos los sitioaño
+expand_cols <- function(mat, all_colnames) {
+  expanded_mat <- matrix(NA, nrow = nrow(mat), ncol = length(all_colnames),
+                         dimnames = list(rownames(mat), all_colnames))
+  expanded_mat[, colnames(mat)] <- mat
+  return(expanded_mat)
+}
+
+CNAA_y <- expand_cols(CNAA_y, all_colnames)
+CCAP_y <- expand_cols(CCAP_y, all_colnames)
+MSP_y  <- expand_cols(MSP_y,  all_colnames)
+
+# Identificar y guardar los NA previos a la unión
+na_CNAA <- is.na(CNAA_y)
+na_CCAP <- is.na(CCAP_y)
+na_MSP  <- is.na(MSP_y)
+
+# Sumar matrices (mismo sitioaño-especie puede estar en varios esquemas)
+CNAA_y[is.na(CNAA_y)] <- 0
+CCAP_y[is.na(CCAP_y)] <- 0
+MSP_y[is.na(MSP_y)] <- 0
+
+y_combined <- CNAA_y + CCAP_y + MSP_y
+
+all_na <- na_CNAA & na_CCAP & na_MSP
+# Mantener los NA originales
+y_combined[all_na] <- NA
+
+# Filas = especies, Columnas = sitio.año
+conteo_por_especie <- rowSums(!is.na(y_combined))
+total_por_especie <- rowSums(y_combined, na.rm = TRUE)
+
+# Evaluaremos el top 10 de las especies según presencia en sitios-años (cantidad de registros x especie)
+sort(conteo_por_especie, decreasing = TRUE)[1:10]
+
+# Evaluaremos el top 10 de las especies según el total de individuos registrados (cantidad de individuos x especie) 
+sort(total_por_especie, decreasing = TRUE)[1:10]
+
+# Según la evaluación previa, seleccionamos las especies que presentan más de 100 registros
+especies_filtradas <- names(conteo_por_especie[conteo_por_especie >= 100])
+# Este filtro resulta en 6 especies que a modo de ejemplo trabajaremos en este taller:
+# Haematopus palliatus, Numenius phaeopus, Limosa haemastica, Tringa flavipes, Tringa melanoleuca y Calidris bairdii
+y_filtrado <- y_combined[especies_filtradas, ]
+
+# Extraer sitio y año
+site_names <- colnames(y_filtrado)
+sitios <- sub("\\..*", "", site_names)
+year <- as.numeric(sub(".*\\.", "", site_names))
+names(year) <- site_names 
+
+# Crear variable esquema
+MSP.ind  <- as.numeric(colnames(y_filtrado) %in% colnames(MSPver$y))
+CNAA.ind <- as.numeric(colnames(y_filtrado) %in% colnames(CNAAver$y))
+CCAP.ind <- as.numeric(colnames(y_filtrado) %in% colnames(CCAPver$y))
+
+# lista de covariables
+covs <- list(
+  MSP  = MSP.ind, #Agregamos el esquemas como covariable, con valor de 0 y 1, donde 1 indica que ese dato proviene del esquema
+  CNAA = CNAA.ind, #Agregamos el esquemas como covariable, con valor de 0 y 1, donde 1 indica que ese dato proviene del esquema
+  CCAP = CCAP.ind, #Agregamos el esquemas como covariable, con valor de 0 y 1, donde 1 indica que ese dato proviene del esquema
+  year = year
+)
+
+# Lista final para el modelo
+data_list <- list(
+  y = y_filtrado,
+  covs = covs
+)
+
+# Tenemos la base de datos preparada. Los siguientes pasos fueron agregados para evitar problemas en la ejecución del modelo
+# Convertir todas las covariables a matrices columna con nombres consistentes
+for (i in seq_along(data_list$covs)) {
+  covariate <- data_list$covs[[i]]
+  if (is.null(dim(covariate))) {
+    mat <- matrix(covariate, ncol = 1)
+    colnames(mat) <- names(data_list$covs)[i]
+    rownames(mat) <- site_names 
+    data_list$covs[[i]] <- mat
+  }
+}
+
+# Conservar los nombres de fila (especies), quitar nombres de columnas en y
+rownames(data_list$y) <- rownames(data_list$y)
+colnames(data_list$y) <- NULL
+data_list$covs <- lapply(data_list$covs, function(x) {
+  dimnames(x) <- NULL
+  return(x)
+})
+
+# Crear un vector con los nuevos códigos, para dejar en la base de datos final los códigos
+species_codes <- c(
+  "Calidris bairdii"      = "BASA",
+  "Haematopus palliatus"  = "AMOY",
+  "Numenius phaeopus"     = "WHIM",
+  "Limosa haemastica"     = "HUGO",
+  "Tringa flavipes"       = "LEYE",
+  "Tringa melanoleuca"    = "GRYE"
+)
+
+# Renombrar las filas de y con los códigos de las especies
+rownames(data_list$y) <- species_codes[rownames(data_list$y)]
+
+site_names <- colnames(data_list$y) 
+
+for (i in names(data_list$covs)) {
+  x <- data_list$covs[[i]]
+  x <- matrix(x, ncol = 1) 
+  rownames(x) <- site_names 
+  colnames(x) <- i
+  data_list$covs[[i]] <- x
+}
+
+# Convertir cada covariable de matriz a vector
+data_list$covs <- lapply(data_list$covs, function(x) {
+  if (is.matrix(x) && ncol(x) == 1) {
+    as.vector(x)
+  } else {
+    x
+  }
+})
+
+# Dejamos el año como factor
+data_list$covs$year <- as.factor(data_list$covs$year)
+
+# Revisamos
+str(data_list)
+```
+
+## Modelado de abunancia con GLMM
+
+Ahora que tenemos nuestros datos preparados, vamos a construir un modelo estadístico para estimar las abundancias y tendencias en el tiempo de las aves playeras seleccionadas. Utilizaremos un Modelo Linear Generalizado Mixto (GLMM) que puede manejar datos de conteo con muchos ceros y sobredispersión.
+
+Preparación del modelo
+
+```{r modelo}
+# Obtener el número de especies para configurar el modelo
+n.sp <- dim(data_list$y)[1]
+
+# Configuración de Valores Iniciales. Los valores iniciales son el "punto de partida" para el algoritmo
+ms.inits <- list(
+  beta.comm = 0, #Efecto promedio a nivel de comunidad
+  beta = 0, #Efectos específicos por especie  
+  tau.sq.beta = 1, #Variabilidad entre especies
+  kappa = 1, #Parámetro de dispersión
+  sigma.sq.mu = 0.5 #Variabilidad en las abundancias medias
+)
+
+# Configuración de distribuciones previas. Estas representan nuestro conocimiento inicial sobre los parámetros. 
+ms.priors <- list(
+  # Prior para efectos de comunidad: normal con media 0 y varianza grande (poco informativo)
+  beta.comm.normal = list(mean = 0, var = 100),
+  
+  # Prior para variabilidad entre especies: gamma inversa poco informativa
+  tau.sq.beta.ig = list(a = 0.1, b = 0.1),
+  
+  # Prior para variabilidad de abundancias: gamma inversa poco informativa  
+  sigma.sq.mu.ig = list(a = 0.1, b = 0.1),
+  
+  # Prior para parámetro de dispersión: uniforme entre 0 y 100
+  kappa.unif = list(a = 0, b = 100)
+)
+
+# Configuración de parámetros de muestreo. Estos controlan cómo el algoritmo explora el espacio de parámetros (Valores más altos = pasos más grandes, valores más bajos = pasos más pequeños).
+ms.tuning <- list(
+  beta = 0.2, #Tamaño de paso para efectos de especies
+  beta.star = 0.3, #Tamaño de paso para nuevos efectos
+  kappa = 0.3 #Tamaño de paso para dispersión
+)
+
+# Modelo
+out.mod <- msAbund(
+  formula = ~ MSP + CNAA + CCAP + year, #Los tres esquemas y el año como variables fijas 
+  data = data_list,
+  inits = ms.inits,
+  n.batch = 2100, #Número de lotes a procesar
+  tuning = ms.tuning,
+  batch.length = 25, #Iteraciones por lote 
+  family = 'NB', #Binomial Negativa para datos de conteo con sobredispersión
+  priors = ms.priors,
+  n.omp.threads = 1, #Número de hilos de procesamiento
+  verbose = TRUE, #Nos muestra el progreso, para omitirlo cambiar por FALSE
+  n.report = 200, #Reportar progreso cada 200 iteraciones       
+  n.burn = 30000, #Iteraciones de "calentamiento" (se descartan)        
+  n.thin = 30, #Tomamos 1 de cada 30 iteraciones (reduce autocorrelación)           
+  n.chains = 4 #Número de cadenas independientes (para verificar convergencia)          
+)
+
+summary(out.mod)
+```
+
+# Diagnosticos del Modelo
+
+Una vez ejecutado el modelo, es importante verificar que funciona correctamente. Los diagnósticos nos permiten evaluar si nuestras estimaciones son confiables.
+Los diagnósticos nos ayudan a entender:
+
+1. **Verificación Predictiva Posterior**: Si el modelo replica bien los datos observados
+2. **Residuales**: Si hay patrones no explicados por el modelo 
+
+```{r diagnosticos}
+# 1. Posterior Predictive Check (PPC). Este análisis compara los datos observados con lo que el modelo predice
+verificacion_predictiva <- ppcAbund(out.mod, fit.stat = 'freeman-tukey', group = 0)
+print(summary(verificacion_predictiva)) # Si el valor de Bayesian p-value está entre 0.3 y 0.7, el modelo ajusta bien
+
+# 2. Análisis de residuales. Los residuales son las diferencias entre lo observado y lo predicho
+
+# Obtener valores ajustados (predicciones del modelo)
+valores_ajustados <- fitted(out.mod)
+promedio_ajustado <- apply(valores_ajustados, 2, mean)
+
+# Preparar datos para el análisis de residuales
+datos_observados <- as.vector(data_list$y)
+valores_predichos <- rep(promedio_ajustado, each = nrow(data_list$y))
+
+# Filtrar solo valores válidos (sin NA y valores predichos > 0)
+indices_validos <- !is.na(datos_observados) & !is.na(valores_predichos) & valores_predichos > 0
+obs_validos <- datos_observados[indices_validos]
+pred_validos <- valores_predichos[indices_validos]
+
+# Verificar que tenemos datos válidos
+if (length(obs_validos) == 0) {
+  cat("⚠ No hay datos válidos para calcular residuales.\n")
+} else {
+  cat("Analizando", length(obs_validos), "observaciones válidas...\n")
+  
+  # Calcular residuales de Pearson (estandarizados) de forma más robusta
+  # Agregamos un pequeño valor para evitar divisiones problemáticas
+  pred_validos_seguro <- pmax(pred_validos, 0.001)
+  residuales <- (obs_validos - pred_validos) / sqrt(pred_validos_seguro)
+  
+  # Remover valores extremos o problemáticos
+  residuales_limpios <- residuales[is.finite(residuales) & !is.na(residuales)]
+  
+  if (length(residuales_limpios) == 0) {
+    cat("⚠ No se pudieron calcular residuales válidos.\n")
+  } else {
+    cat("Resumen de residuales (", length(residuales_limpios), "valores):\n")
+    cat("  Mínimo:", round(min(residuales_limpios, na.rm = TRUE), 3), "\n")
+    cat("  1er Cuartil:", round(quantile(residuales_limpios, 0.25, na.rm = TRUE), 3), "\n")
+    cat("  Mediana:", round(median(residuales_limpios, na.rm = TRUE), 3), "\n")
+    cat("  Media:", round(mean(residuales_limpios, na.rm = TRUE), 3), "\n")
+    cat("  3er Cuartil:", round(quantile(residuales_limpios, 0.75, na.rm = TRUE), 3), "\n")
+    cat("  Máximo:", round(max(residuales_limpios, na.rm = TRUE), 3), "\n")
+    
+    # Actualizar la variable residuales para usar en los gráficos
+    residuales <- residuales_limpios
+  }
+}
+
+# Gráficos del diagnóstico 
+# Para los gráficos de residuales, necesitamos emparejar correctamente los datos
+indices_finales <- !is.na(datos_observados) & !is.na(valores_predichos) & 
+                   valores_predichos > 0.001 & is.finite((datos_observados - valores_predichos) / sqrt(valores_predichos))
+
+obs_finales <- datos_observados[indices_finales]
+pred_finales <- valores_predichos[indices_finales]
+residuales_finales <- (obs_finales - pred_finales) / sqrt(pred_finales)
+
+# Configuramos la ventana gráfica para mostrar los 3 gráficos en una cuadrícula de 2x2
+par(mfrow = c(2, 2), mar = c(4, 4, 3, 2))
+
+# Gráfico 1: Residuales vs Valores Ajustados
+# Los puntos deben estar dispersos aleatoriamente alrededor de la línea roja (y=0). Patrones indican problemas del modelo.
+plot(pred_finales, residuales_finales, 
+         main = "Residuales vs Valores Ajustados",
+         xlab = "Valores Ajustados", 
+         ylab = "Residuales de Pearson",
+         pch = 16, col = rgb(0, 0, 1, 0.6)) +
+  abline(h = 0, col = "red", lty = 2, lwd = 2) 
+
+# Gráfico 2: Q-Q plot (comparación con distribución normal)
+# Los puntos deben seguir la línea roja. Desviaciones indican que los residuales no siguen una distribución normal
+qqnorm(residuales_finales, main = "Q-Q Plot de Residuales",
+         pch = 16, col = rgb(0, 0, 1, 0.6))
+qqline(residuales_finales, col = "red", lwd = 2)
+  
+# Gráfico 3: Histograma de residuales
+# Debe parecerse a una campana (distribución normal)
+hist(residuales, main = "Distribución de Residuales", 
+    xlab = "Residuales de Pearson", 
+    col = rgb(0.7, 0.9, 1, 0.7), border = "black", 
+    breaks = min(30, max(5, length(residuales)/20)))  # Ajustar número de breaks
+  
+  # Agregar curva normal teórica
+  x_norm <- seq(min(residuales), max(residuales), length = 100)
+  y_norm <- dnorm(x_norm, mean(residuales), sd(residuales))
+  y_norm <- y_norm * length(residuales) * diff(range(residuales)) / 
+              min(30, max(5, length(residuales)/20))
+  lines(x_norm, y_norm, col = "red", lwd = 2)
+
+# Restaurar configuración gráfica
+par(mfrow = c(1, 1))
+
+```
+
+# Análisis de Resultados del Modelo de Abundancia 
+
+Una vez que tenemos nuestro modelo ajustado, es importante extraer y visualizar los resultados de manera comprensible. En esta sección crearemos tablas resumen y gráficos que nos ayuden a interpretar las abundancias estimadas y las tendencias temporales.
+
+El modelo nos proporciona estimaciones de abundancia para cada combinación de sitio, año y especie. Necesitamos extraer esta información y organizarla de manera clara.
+
+```{r resultados}
+#Creamos las carpetas en las que guardaremis los resultados
+dir.create("resultados_abundancia", showWarnings = FALSE)
+dir.create("resultados_abundancia/tablas", showWarnings = FALSE)
+dir.create("resultados_abundancia/graficos", showWarnings = FALSE)
+
+# Extraemos la información básica de nuestros datos originales
+site_year_names <- colnames(y_filtrado)  # Nombres de sitio.año 
+sitios <- sub("\\..*", "", site_year_names)  # Extraemos el nombre del sitio
+años <- as.numeric(sub(".*\\.", "", site_year_names))  # Extraemos el año
+
+# Obtenemos las abundancias estimadas del modelo (muestras posteriores)
+mu_samples <- fitted(out.mod)  # Función que extrae las estimaciones del modelo
+
+# Dimensiones de nuestros resultados
+n_samples <- dim(mu_samples)[1]  # Número de muestras de la distribución posterior
+n_species <- dim(mu_samples)[2]  # Número de especies (6 en nuestro caso)
+n_obs     <- dim(mu_samples)[3]  # Número de observaciones (combinaciones de sitio-año)
+
+# Recuperamos el nombre de las especies 
+species_names <- rownames(data_list$y)
+
+# Creamos un dataframe completo, con todas las combinaciones, esto nos ayudará a organizar mejor los resultados
+mu_df_completo <- expand.grid(
+  muestra = 1:n_samples,        # Cada muestra de la distribución posterior
+  obs_idx = 1:n_obs,           # Cada observación (sitio-año)
+  especie = species_names,      # Cada especie
+  stringsAsFactors = FALSE
+)
+
+# Agregamos las abundancias estimadas y la información adicional
+mu_df_completo$abundancia <- as.vector(mu_samples)
+mu_df_completo$sitio_año <- rep(rep(site_year_names, each = n_samples), times = n_species)
+mu_df_completo$sitio <- rep(rep(sitios, each = n_samples), times = n_species)
+mu_df_completo$año <- rep(rep(años, each = n_samples), times = n_species)
+
+# Lista de sitios únicos para los gráficos 
+sitios_unicos <- unique(mu_df_completo$sitio)
+```
+
+Creamos tablas que resumen nuestros resultados.
+
+```{r tablas}
+# Tabla 1: Abundancias estimadas por sitio-especie-año
+resumen_estimaciones <- mu_df_completo %>%
+  group_by(sitio, especie, año) %>%
+  summarise(
+    # Medidas de tendencia central
+    abundancia_media = round(mean(abundancia), 2),
+    abundancia_mediana = round(median(abundancia), 2),
+    
+    # Medida de dispersión
+    desviacion_std = round(sd(abundancia), 2),
+    
+    # Intervalos de credibilidad (equivalente bayesiano de intervalos de confianza)
+    ic_inferior_95 = round(quantile(abundancia, 0.025), 2),  # Límite inferior 95%
+    ic_superior_95 = round(quantile(abundancia, 0.975), 2),  # Límite superior 95%
+    ic_inferior_50 = round(quantile(abundancia, 0.25), 2),   # Límite inferior 50%
+    ic_superior_50 = round(quantile(abundancia, 0.75), 2),   # Límite superior 50%
+    .groups = 'drop'
+  ) %>%
+  arrange(sitio, especie, año)  # Ordenar por sitio, especie y año
+
+# Tabla 2: Datos observados originales
+
+datos_observados_long <- data.frame()  # Data frame vacío para llenar
+
+# Recorremos cada especie (filas de la matriz)
+for(i in 1:nrow(data_list$y)) {
+  especie_nombre <- rownames(data_list$y)[i]
+  
+  # Recorremos cada sitio-año (columnas de la matriz)
+  for(j in 1:ncol(data_list$y)) {
+    sitio_año <- site_year_names[j]
+    sitio <- sitios[j]
+    año <- años[j]
+    abundancia_obs <- data_list$y[i, j]  # Valor observado
+    
+    # Solo incluir valores que no sean NA
+    if(!is.na(abundancia_obs)) { 
+      datos_observados_long <- rbind(datos_observados_long, 
+                                   data.frame(
+                                     sitio = sitio,
+                                     especie = especie_nombre,
+                                     año = año,
+                                     abundancia_observada = abundancia_obs
+                                   ))
+    }
+  }
+}
+
+# Tabla 3: Comparación entre datos observados y estimados
+comparacion_completa <- merge(
+  datos_observados_long, 
+  resumen_estimaciones, 
+  by = c("sitio", "especie", "año"),  # Variables para hacer la unión
+  all = TRUE  # Mantener todas las filas
+)
+
+# Agregar columnas que evalúan si los datos observados caen dentro de los intervalos
+comparacion_completa <- comparacion_completa %>%
+  mutate(
+    # ¿El valor observado está dentro del intervalo del 95%?
+    dentro_ic_95 = abundancia_observada >= ic_inferior_95 & abundancia_observada <= ic_superior_95,
+    # ¿El valor observado está dentro del intervalo del 50%?
+    dentro_ic_50 = abundancia_observada >= ic_inferior_50 & abundancia_observada <= ic_superior_50
+  ) %>%
+  arrange(sitio, especie, año)
+
+# Guardamos todas las tablas en un archivo Excel, una tabla por hoja
+write_xlsx(
+  list(
+    "Resumen_Estimaciones" = resumen_estimaciones,
+    "Datos_Observados" = datos_observados_long,
+    "Comparacion_Completa" = comparacion_completa
+  ),
+  path = "resultados_abundancia/tablas/resumen_general_abundancia.xlsx"
+)
+
+# Crear una tabla resumen
+resumen_compacto <- comparacion_completa %>%
+  group_by(sitio, especie) %>%
+  summarise(
+    años_monitoreados = n(),  # Cuántos años tenemos datos
+    abundancia_obs_promedio = round(mean(abundancia_observada, na.rm = TRUE), 1),
+    abundancia_est_promedio = round(mean(abundancia_media, na.rm = TRUE), 1),
+    observaciones_en_ic95 = sum(dentro_ic_95, na.rm = TRUE),  # Cuántas obs. caen en el IC95%
+    porcentaje_en_ic95 = round(100 * sum(dentro_ic_95, na.rm = TRUE) / n(), 1),  # % de acierto
+    .groups = 'drop'
+  ) %>%
+  arrange(sitio, especie)
+
+# Guardamos la tabla resumen compacta
+write_xlsx(resumen_compacto, "resultados_abundancia/tablas/resumen_compacto.xlsx")
+```
+
+Los gráficos nos ayudan a visualizar las tendencias temporales y la variabilidad en las estimaciones de abundancia. 
+Primero generaremos gráficos para los diferentes sitios monitoreados.
+
+```{r gráficos por sitio}
+# Gráficos por sitio. Esta función genera un gráfico con boxplots mostrando la distribución de abundancias estimadas
+grafico_sitio <- function(sitio_nombre, data = mu_df_completo) {
+  # Filtrar datos solo para el sitio específico
+  data_sitio <- data[data$sitio == sitio_nombre, ]
+  
+  # Crear el gráfico
+  ggplot(data_sitio, aes(x = as.factor(año), y = abundancia, fill = as.factor(año))) +
+    # Boxplots para mostrar la distribución de abundancias estimadas
+    geom_boxplot(alpha = 0.6,           # Transparencia
+                color = "black",        # Color del borde
+                outlier.shape = 21,     # Forma de los valores atípicos
+                outlier.size = 1.5) +   # Tamaño de los valores atípicos
+    
+    # Separar por especie en paneles diferentes
+    facet_wrap(~ especie, scales = "free_y") +  # "free_y" permite escalas Y independientes
+    
+    # Tema y estética
+    theme_minimal() +
+    theme(
+      strip.text = element_text(size = 12, family = "Times", face = "bold"),
+      axis.text = element_text(size = 10, family = "Times"),
+      axis.title = element_text(size = 12, family = "Times"),
+      plot.title = element_text(size = 14, hjust = 0.5, family = "Times"),
+      legend.position = "none"  
+    ) +
+    
+    # Etiquetas del gráfico
+    labs(
+      x = "Año",
+      y = "Número de Individuos Estimados",
+      title = paste("Estimaciones de Abundancia - Sitio:", sitio_nombre)
+    ) +
+    
+    # Paleta de colores
+    scale_fill_brewer(palette = "Blues", name = "Año")
+}
+
+
+# Para observar mejor los resultados generaremos gráficos sin outlyers
+grafico_sitio2 <- function(sitio_nombre, data = mu_df_completo, guardar = TRUE) {
+  data_sitio <- data[data$sitio == sitio_nombre, ]
+  
+  stats_sitio <- data_sitio %>%
+    group_by(especie, año) %>%
+    summarise(
+      media = mean(abundancia),
+      mediana = median(abundancia),
+      q25 = quantile(abundancia, 0.25),
+      q75 = quantile(abundancia, 0.75),
+      ic_inf = quantile(abundancia, 0.025),
+      ic_sup = quantile(abundancia, 0.975),
+      .groups = 'drop'
+    )
+  
+  y_max_por_especie <- stats_sitio %>%
+    group_by(especie) %>%
+    summarise(ymax_custom = max(q75, ic_sup, na.rm = TRUE) * 1.1)  # 10% margen
+  
+  data_filtrada <- data_sitio %>%
+    left_join(y_max_por_especie, by = "especie") %>%
+    filter(abundancia <= ymax_custom)
+
+  p <- ggplot(data_filtrada, aes(x = as.factor(año), y = abundancia, fill = as.factor(año))) +
+    geom_boxplot(alpha = 0.6, color = "black", outlier.shape = NA) +
+    
+    geom_errorbar(data = stats_sitio, 
+                  aes(x = as.factor(año), ymin = ic_inf, ymax = ic_sup),
+                  width = 0.2, color = "grey10", linewidth = 0.8, alpha = 0.7,
+                  inherit.aes = FALSE) +
+    
+    facet_wrap(~ especie, scales = "free_y", ncol = 3) +
+    theme_minimal() +
+    theme(
+      strip.text = element_text(size = 12, family = "Times", face = "bold"),
+      axis.text.x = element_text(size = 10, family = "Times", angle = 45, hjust = 1),
+      axis.text.y = element_text(size = 10, family = "Times"),
+      axis.title = element_text(size = 12, family = "Times"),
+      plot.title = element_text(size = 14, hjust = 0.5, family = "Times", face = "bold"),
+      plot.subtitle = element_text(size = 11, hjust = 0.5, family = "Times"),
+      plot.caption = element_text(size = 9, family = "Times", hjust = 0),
+      legend.position = "none"
+    ) +
+    labs(
+      x = "Año",
+      y = "Número de Individuos Estimados",
+      title = "Abundancia Estimada por Especie (sin outliers)",
+      subtitle = paste("Sitio:", sitio_nombre),
+      caption = "Cajas: Q1-Q3 | Línea: mediana | Barras: IC 95%"
+    ) +
+    scale_fill_brewer(palette = "Set3", name = "Año")
+  return(p)
+}
+
+# Generamos los gráficos para todos los sitios
+for(sitio in sitios_unicos) {
+  print(paste("Creando gráfico para:", sitio))
+  
+  # Crear el gráfico
+  p1 <- grafico_sitio(sitio)
+  
+  # Crear el gráfico sin outlyers
+  p2 <- grafico_sitio2(sitio)
+  
+  # Guarda el gráfico
+  nombre_archivo1 <- paste0("resultados_abundancia/graficos/abundancia_", sitio, ".png")
+  ggsave(nombre_archivo1, p1, width = 12, height = 8, dpi = 300)
+  
+  nombre_archivo2 <- paste0("resultados_abundancia/graficos/abundancia2_", sitio, ".png")
+  ggsave(nombre_archivo2, p2, width = 12, height = 8, dpi = 300)
+}
+
+```
+
+Además generaremos gráficos para las especies. Un panel de 9 gráficos por especie, uno por cada sitio monitoreado y un gráfico general de estimación de abundancia para cada especie, considerando todos los sitios. 
+
+```{r gráficos por especie}
+grafico_especie <- function(especie_nombre, sitio_nombre, data = mu_df_completo) {
+  
+  data_filtrada <- data[data$especie == especie_nombre & data$sitio == sitio_nombre, ]
+  
+  if(nrow(data_filtrada) == 0) {
+    return(NULL) 
+  }
+  
+  stats_datos <- data_filtrada %>%
+    group_by(año) %>%
+    summarise(
+      media = mean(abundancia),
+      mediana = median(abundancia),
+      ic_inf_95 = quantile(abundancia, 0.025),
+      ic_sup_95 = quantile(abundancia, 0.975),
+      ic_inf_50 = quantile(abundancia, 0.25),
+      ic_sup_50 = quantile(abundancia, 0.75),
+      .groups = 'drop'
+    )
+  
+  p <- ggplot(stats_datos, aes(x = año)) +
+    geom_ribbon(aes(ymin = ic_inf_95, ymax = ic_sup_95), alpha = 0.2, fill = "lightgray") +
+    geom_ribbon(aes(ymin = ic_inf_50, ymax = ic_sup_50), alpha = 0.4, fill = "darkgray") +
+    geom_line(aes(y = media), color = "darkblue", linewidth = 1.5) +
+    geom_line(aes(y = mediana), color = "darkred", linewidth = 1, linetype = "dotted") +
+    theme_minimal() +
+    theme(
+      axis.text = element_text(size = 9, family = "Times"),
+      axis.title = element_text(size = 10, family = "Times"),
+      plot.title = element_text(size = 11, hjust = 0.5, family = "Times", face = "bold"),
+      axis.title.x = element_blank(),
+      plot.margin = margin(5,5,5,5)
+    ) +
+    labs(
+      y = "Abundancia",
+      title = sitio_nombre
+    ) +
+    scale_x_continuous(breaks = pretty_breaks(n = 3)) + 
+    scale_y_continuous(labels = comma_format())
+  
+  return(p)
+}
+
+panel <- function(especie_nombre, data = mu_df_completo, guardar = TRUE) {
+  
+  cat(paste("Procesando especie:", especie_nombre, "\n"))
+  
+  plots_sitios <- list()
+  
+  for(sitio in sitios_unicos) {
+    p_sitio <- grafico_especie(especie_nombre, sitio, data)
+    if(!is.null(p_sitio)) {
+      plots_sitios[[sitio]] <- p_sitio
+    } else {
+      plots_sitios[[sitio]] <- ggplot() + 
+        annotate("text", x = 0.5, y = 0.5, label = "Sin datos", size = 4, color = "gray50") +
+        theme_void() +
+        theme(plot.title = element_text(size = 11, hjust = 0.5, family = "Times", face = "bold")) +
+        ggtitle(sitio)
+    }
+  }
+  
+  titulo_panel <- paste("Abundancia por Sitio -", especie_nombre)
+  subtitulo_panel <- "Línea azul: media | Línea roja punteada: mediana | Bandas grises: intervalos de confianza (claro=95%, oscuro=50%)"
+  
+  panel <- grid.arrange(
+    grobs = plots_sitios,
+    ncol = 3,
+    top = textGrob(titulo_panel, gp = gpar(fontsize = 16, fontface = "bold", fontfamily = "Times")),
+    bottom = textGrob(subtitulo_panel, gp = gpar(fontsize = 10, fontfamily = "Times", col = "gray40"))
+  )
+  
+  if(guardar) {
+    ggsave(
+      filename = paste0("resultados_abundancia/por_especie/", especie_nombre, "/abundancia_sitios_", especie_nombre, ".png"),
+      plot = panel,
+      width = 15, height = 12, dpi = 300, bg = "white"
+    )
+  }
+  
+  return(panel)
+}
+
+estpop <- function(especie_nombre, data = mu_df_completo, guardar = TRUE) {
+  
+  data_especie <- data[data$especie == especie_nombre, ]
+  estimacion_poblacional <- data_especie %>%
+    group_by(muestra, año) %>%
+    summarise(abundancia_total = sum(abundancia), .groups = 'drop') %>%
+    group_by(año) %>%
+    summarise(
+      media_poblacion = mean(abundancia_total),
+      mediana_poblacion = median(abundancia_total),
+      ic_inf_95 = quantile(abundancia_total, 0.025),
+      ic_sup_95 = quantile(abundancia_total, 0.975),
+      ic_inf_50 = quantile(abundancia_total, 0.25),
+      ic_sup_50 = quantile(abundancia_total, 0.75),
+      .groups = 'drop'
+    )
+  
+  p_poblacional <- ggplot(estimacion_poblacional, aes(x = año)) +
+    geom_ribbon(aes(ymin = ic_inf_95, ymax = ic_sup_95), alpha = 0.2, fill = "lightgray") +
+    geom_ribbon(aes(ymin = ic_inf_50, ymax = ic_sup_50), alpha = 0.4, fill = "darkgray") +
+    geom_line(aes(y = media_poblacion), color = "darkblue", linewidth = 2) +
+    geom_line(aes(y = mediana_poblacion), color = "darkred", linewidth = 1.5, linetype = "dotted") +
+    theme_minimal() +
+    theme(
+      axis.text = element_text(size = 12, family = "Times"),
+      axis.title = element_text(size = 14, family = "Times"),
+      plot.title = element_text(size = 16, hjust = 0.5, family = "Times", face = "bold"),
+      plot.caption = element_text(size = 10, family = "Times", hjust = 0)
+    ) +
+    labs(
+      x = "Año",
+      y = "Abundancia Poblacional Estimada (9 sitios)",
+      title = paste("Estimación Poblacional Nacional -", especie_nombre),
+      caption = "Línea azul: media | Línea roja punteada: mediana\nBandas grises: intervalos de confianza (claro=95%, oscuro=50%)"
+    ) +
+    scale_x_continuous(breaks = pretty_breaks(n = 6)) +
+    scale_y_continuous(labels = comma_format())
+  
+  if(guardar) {
+    ggsave(
+      filename = paste0("resultados_abundancia/por_especie/", especie_nombre, "/estimacion_poblacional_", especie_nombre, ".png"),
+      plot = p_poblacional,
+      width = 12, height = 8, dpi = 300, bg = "white"
+    )
+  }
+  
+  return(list(grafico = p_poblacional, datos = estimacion_poblacional))
+}
+
+especies_nombres <- rownames(data_list$y)
+
+dir.create("resultados_abundancia/por_especie", showWarnings = FALSE)
+
+for(especie in especies_nombres) {
+  dir.create(paste0("resultados_abundancia/por_especie/", especie), showWarnings = FALSE)
+}
+
+paneles_especies <- list()
+estimaciones_poblacionales <- list()
+
+# Crear todos los gráficos
+for(i in seq_along(especies_nombres)) {
+  especie <- especies_nombres[i]
+  
+  # Panel por sitios (9 gráficos)
+  panel_sitios <- panel(especie, data = mu_df_completo, guardar = TRUE)
+  paneles_especies[[especie]] <- panel_sitios
+  
+  # Estimación poblacional general
+  est_poblacional <- estpop(especie, data = mu_df_completo, guardar = TRUE)
+  estimaciones_poblacionales[[especie]] <- est_poblacional
+  
+}
+
+```
+
+
