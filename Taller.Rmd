@@ -552,7 +552,27 @@ ms.tuning <- list(
   kappa = 0.3 #Tamaño de paso para dispersión
 )
 
-# Modelo
+# Modelo nulo 
+# El modelo nulo incluye solo un intercepto (~ 1). Se asume que la abundancia es constante para todas las especies a través del tiempo y entre esquemas de monitoreo. Es nuestro "modelo base", el más simple.
+out.0 <- msAbund(
+  formula = ~ 1, 
+  data = data_list,
+  inits = ms.inits,
+  n.batch = 2100, #Número de lotes a procesar
+  tuning = ms.tuning,
+  batch.length = 25, #Iteraciones por lote 
+  family = 'NB', #Binomial Negativa para datos de conteo con sobredispersión
+  priors = ms.priors,
+  n.omp.threads = 1, #Número de hilos de procesamiento
+  verbose = TRUE, #Nos muestra el progreso, para omitirlo cambiar por FALSE
+  n.report = 200, #Reportar progreso cada 200 iteraciones       
+  n.burn = 30000, #Iteraciones de "calentamiento" (se descartan)        
+  n.thin = 30, #Tomamos 1 de cada 30 iteraciones (reduce autocorrelación)           
+  n.chains = 4 #Número de cadenas independientes (para verificar convergencia)          
+)
+
+# Modelo completo
+# El modelo completo incluye las covariables (~ MSP + CNAA + CCAP + year), lo que le permite capturar diferencias entre esquemas de monitoreo y tendencias temporales.
 out.mod <- msAbund(
   formula = ~ MSP + CNAA + CCAP + year, #Los tres esquemas y el año como variables fijas 
   data = data_list,
@@ -569,6 +589,15 @@ out.mod <- msAbund(
   n.thin = 30, #Tomamos 1 de cada 30 iteraciones (reduce autocorrelación)           
   n.chains = 4 #Número de cadenas independientes (para verificar convergencia)          
 )
+
+# Comparación de Modelos: Modelo Completo (out.mod) vs Modelo Nulo (out.0)
+
+# Para evaluar si las covariables incluidas en el modelo completo realmente mejoran nuestras predicciones, comparamos los modelos usando WAIC (Widely Applicable Information Criterion). 
+# WAIC es una medida que balanza el ajuste del modelo con su complejidad. Valores más BAJOS de WAIC indican mejores modelos.
+
+# Calculamos WAIC para ambos modelos
+waicAbund(out.0)
+waicAbund(out.mod)
 
 summary(out.mod)
 ```
@@ -676,6 +705,28 @@ hist(residuales, main = "Distribución de Residuales",
 par(mfrow = c(1, 1))
 
 ```
+
+# Limitaciones del Modelo y Consideraciones Importantes
+
+Los gráficos de diagnóstico revelan algunas limitaciones importantes en nuestro modelo. Al observar los gráficos de diagnóstico, podemos identificar:
+
+Gráfico 1.- Residuales vs Valores Ajustados: Los puntos no se distribuyen aleatoriamente alrededor de la línea roja (y=0).
+
+Gráfico 2.- Q-Q plot (comparación con distribución normal): Los puntos se desvían de la línea roja, especialmente en los extremos.
+
+Gráfico 3.- Histograma de residuales: La distribución no es normal, hay asimetría.
+
+Problemas identificados:
+- Sobredispersión: La variabilidad real es mayor que la asumida por el modelo
+- Heterocedasticidad: La varianza no es constante a través de los valores predichos
+- No normalidad: Los residuales no siguen una distribución normal
+
+# Posible soluciones y mejoras al modelo
+
+Para mejorar algunos de los problemas mencionados creemos que puede ser relevante incluir variables ambientales como factores climáticos (temperatura, precipitación), hábitat (superficie o tipo de sustrato), factores antropogénicos (pertubaciones o cercanía a ciudades) o incluso ciclos periódicos, como el fenómeno El Niño/La Niña.
+
+Además debemos considerar cambiar la familia de distribución usada (Binomial Negativa) por una cero inflado, como la Binomial Negativo Cero Inflado, por la características de los datos (sobredispersión y exceso de ceros). Sin embargo, el paquete spAbundance actualmente solo maneja las familias 'NB' (binomial negativo), 'Poisson', 'Gaussian' y 'zi-Gaussian'.
+
 
 # Análisis de Resultados del Modelo de Abundancia 
 
@@ -861,10 +912,13 @@ grafico_sitio <- function(sitio_nombre, data = mu_df_completo) {
 }
 
 
-# Para observar mejor los resultados generaremos gráficos sin outlyers
+# Para observar mejor los resultados generaremos gráficos sin outliers. Los outliers pueden influir en la escala del gráfico lo que puede dificultar observar el "grueso" de los resultados.
+
+# Esta función crea una versión "limpia" que facilita la interpretación visual.
 grafico_sitio2 <- function(sitio_nombre, data = mu_df_completo, guardar = TRUE) {
+  # Filtar datos para cada sitio
   data_sitio <- data[data$sitio == sitio_nombre, ]
-  
+  # Calcular estadísticas por especie y año
   stats_sitio <- data_sitio %>%
     group_by(especie, año) %>%
     summarise(
@@ -876,18 +930,23 @@ grafico_sitio2 <- function(sitio_nombre, data = mu_df_completo, guardar = TRUE) 
       ic_sup = quantile(abundancia, 0.975),
       .groups = 'drop'
     )
-  
+  # Determinar el límite superior para cada especie (evita que outliers compriman la escala)
+  # Usamos el mayor valor entre Q3 e IC superior, más un 10% de margen
   y_max_por_especie <- stats_sitio %>%
     group_by(especie) %>%
     summarise(ymax_custom = max(q75, ic_sup, na.rm = TRUE) * 1.1)  # 10% margen
   
+  # Filtrar datos eliminando valores que excedan estos límites
   data_filtrada <- data_sitio %>%
     left_join(y_max_por_especie, by = "especie") %>%
     filter(abundancia <= ymax_custom)
-
+ 
+  # Crear el gráfico 
   p <- ggplot(data_filtrada, aes(x = as.factor(año), y = abundancia, fill = as.factor(año))) +
+    # Boxplots sin mostrar outliers (outlier.shape = NA los oculta)
     geom_boxplot(alpha = 0.6, color = "black", outlier.shape = NA) +
     
+    # Agregar barras de error mostrando intervalos de confianza
     geom_errorbar(data = stats_sitio, 
                   aes(x = as.factor(año), ymin = ic_inf, ymax = ic_sup),
                   width = 0.2, color = "grey10", linewidth = 0.8, alpha = 0.7,
@@ -939,30 +998,36 @@ for(sitio in sitios_unicos) {
 Además generaremos gráficos para las especies. Un panel de 9 gráficos por especie, uno por cada sitio monitoreado y un gráfico general de estimación de abundancia para cada especie, considerando todos los sitios. 
 
 ```{r gráficos por especie}
+# Función para crear gráficos de tendencia temporal por sitio para una especie específica. Estos gráficos nos permiten visualizar cómo cambia la abundancia de una especie en un sitio particular.
 grafico_especie <- function(especie_nombre, sitio_nombre, data = mu_df_completo) {
-  
+  # Filtrar datos solo para la combinación específica de especie y sitio
   data_filtrada <- data[data$especie == especie_nombre & data$sitio == sitio_nombre, ]
-  
+  # Si no hay datos para esta combinación, devolver NULL
+  # Esto puede ocurrir cuando una especie no ha sido observada en un sitio específico  
   if(nrow(data_filtrada) == 0) {
     return(NULL) 
   }
-  
+  # Calcular estadísticas resumen por año
   stats_datos <- data_filtrada %>%
     group_by(año) %>%
     summarise(
-      media = mean(abundancia),
-      mediana = median(abundancia),
-      ic_inf_95 = quantile(abundancia, 0.025),
-      ic_sup_95 = quantile(abundancia, 0.975),
-      ic_inf_50 = quantile(abundancia, 0.25),
-      ic_sup_50 = quantile(abundancia, 0.75),
+      media = mean(abundancia), # Abundancia promedio estimada 
+      mediana = median(abundancia), # Mediana
+      ic_inf_95 = quantile(abundancia, 0.025), # Límite inferior intervalo 95%
+      ic_sup_95 = quantile(abundancia, 0.975), # Límite superior intervalo 95%
+      ic_inf_50 = quantile(abundancia, 0.25), # Límite inferior intervalo 50%
+      ic_sup_50 = quantile(abundancia, 0.75), # Límite superior intervalo 50%
       .groups = 'drop'
     )
-  
+  # Crear el gráfico
   p <- ggplot(stats_datos, aes(x = año)) +
+    # Banda gris clara: zona de mayor incertidumbre (95% de los datos
     geom_ribbon(aes(ymin = ic_inf_95, ymax = ic_sup_95), alpha = 0.2, fill = "lightgray") +
+    # Banda gris oscura: zona de menor incertidumbre (50% de los datos)
     geom_ribbon(aes(ymin = ic_inf_50, ymax = ic_sup_50), alpha = 0.4, fill = "darkgray") +
+    # Línea azul: tendencia de la abundancia media a través del tiempo
     geom_line(aes(y = media), color = "darkblue", linewidth = 1.5) +
+    # Línea roja punteada: tendencia de la mediana (menos influenciada por valores extremos)
     geom_line(aes(y = mediana), color = "darkred", linewidth = 1, linetype = "dotted") +
     theme_minimal() +
     theme(
@@ -982,6 +1047,7 @@ grafico_especie <- function(especie_nombre, sitio_nombre, data = mu_df_completo)
   return(p)
 }
 
+# Para cada especie generaremos un panel con los 9 gráficos, uno por sitio.
 panel <- function(especie_nombre, data = mu_df_completo, guardar = TRUE) {
   
   cat(paste("Procesando especie:", especie_nombre, "\n"))
@@ -1004,6 +1070,7 @@ panel <- function(especie_nombre, data = mu_df_completo, guardar = TRUE) {
   titulo_panel <- paste("Abundancia por Sitio -", especie_nombre)
   subtitulo_panel <- "Línea azul: media | Línea roja punteada: mediana | Bandas grises: intervalos de confianza (claro=95%, oscuro=50%)"
   
+  # Combinar todos los gráficos en un solo panel organizado en cuadrícula 3x3
   panel <- grid.arrange(
     grobs = plots_sitios,
     ncol = 3,
@@ -1022,12 +1089,17 @@ panel <- function(especie_nombre, data = mu_df_completo, guardar = TRUE) {
   return(panel)
 }
 
+# Función para crear gráficos de tendencia temporal para cada especie. Estos gráficos nos permiten visualizar cómo cambia la abundancia de una especie considerando los 9 sitios monitoreados. Esta función suma las abundancias de todos los sitios para obtener una "estimación de la población local" de cada especie.
+
 estpop <- function(especie_nombre, data = mu_df_completo, guardar = TRUE) {
   
   data_especie <- data[data$especie == especie_nombre, ]
+  # Calcular la abundancia total por año sumando todos los sitios
+  # Para cada muestra del modelo bayesiano y cada año, sumamos las abundancias  
   estimacion_poblacional <- data_especie %>%
     group_by(muestra, año) %>%
     summarise(abundancia_total = sum(abundancia), .groups = 'drop') %>%
+    # Calculamos estadísticas resumen por año
     group_by(año) %>%
     summarise(
       media_poblacion = mean(abundancia_total),
@@ -1038,11 +1110,16 @@ estpop <- function(especie_nombre, data = mu_df_completo, guardar = TRUE) {
       ic_sup_50 = quantile(abundancia_total, 0.75),
       .groups = 'drop'
     )
-  
+ 
+  # Crear gráfico 
   p_poblacional <- ggplot(estimacion_poblacional, aes(x = año)) +
+    # Banda gris clara: zona de mayor incertidumbre (95% de los datos
     geom_ribbon(aes(ymin = ic_inf_95, ymax = ic_sup_95), alpha = 0.2, fill = "lightgray") +
+    # Banda gris oscura: zona de menor incertidumbre (50% de los datos)
     geom_ribbon(aes(ymin = ic_inf_50, ymax = ic_sup_50), alpha = 0.4, fill = "darkgray") +
+    # Línea azul: tendencia de la abundancia media a través del tiempo
     geom_line(aes(y = media_poblacion), color = "darkblue", linewidth = 2) +
+    # Línea roja punteada: tendencia de la mediana (menos influenciada por valores extremos)
     geom_line(aes(y = mediana_poblacion), color = "darkred", linewidth = 1.5, linetype = "dotted") +
     theme_minimal() +
     theme(
@@ -1054,7 +1131,7 @@ estpop <- function(especie_nombre, data = mu_df_completo, guardar = TRUE) {
     labs(
       x = "Año",
       y = "Abundancia Poblacional Estimada (9 sitios)",
-      title = paste("Estimación Poblacional Nacional -", especie_nombre),
+      title = paste("Estimación Poblacional -", especie_nombre),
       caption = "Línea azul: media | Línea roja punteada: mediana\nBandas grises: intervalos de confianza (claro=95%, oscuro=50%)"
     ) +
     scale_x_continuous(breaks = pretty_breaks(n = 6)) +
@@ -1067,22 +1144,26 @@ estpop <- function(especie_nombre, data = mu_df_completo, guardar = TRUE) {
       width = 12, height = 8, dpi = 300, bg = "white"
     )
   }
-  
+  # Devolver tanto el gráfico como los datos calculados
   return(list(grafico = p_poblacional, datos = estimacion_poblacional))
 }
 
+# Obtener lista de especies para procesar
 especies_nombres <- rownames(data_list$y)
 
+# Creamos una carpeta para organizar los resultados por especie
 dir.create("resultados_abundancia/por_especie", showWarnings = FALSE)
 
+# Creamos una carpeta individual para cada especie
 for(especie in especies_nombres) {
   dir.create(paste0("resultados_abundancia/por_especie/", especie), showWarnings = FALSE)
 }
 
+# Listas para almacenar todos los resultados generados
 paneles_especies <- list()
 estimaciones_poblacionales <- list()
 
-# Crear todos los gráficos
+# Creamos todos los gráficos por especie
 for(i in seq_along(especies_nombres)) {
   especie <- especies_nombres[i]
   
