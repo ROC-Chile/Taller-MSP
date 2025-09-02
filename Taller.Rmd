@@ -1015,20 +1015,14 @@ grafico_especie <- function(especie_nombre, sitio_nombre, data = mu_df_completo)
       mediana = median(abundancia), # Mediana
       ic_inf_95 = quantile(abundancia, 0.025), # Límite inferior intervalo 95%
       ic_sup_95 = quantile(abundancia, 0.975), # Límite superior intervalo 95%
-      ic_inf_50 = quantile(abundancia, 0.25), # Límite inferior intervalo 50%
-      ic_sup_50 = quantile(abundancia, 0.75), # Límite superior intervalo 50%
       .groups = 'drop'
     )
   # Crear el gráfico
   p <- ggplot(stats_datos, aes(x = año)) +
     # Banda gris clara: zona de mayor incertidumbre (95% de los datos
     geom_ribbon(aes(ymin = ic_inf_95, ymax = ic_sup_95), alpha = 0.2, fill = "lightgray") +
-    # Banda gris oscura: zona de menor incertidumbre (50% de los datos)
-    geom_ribbon(aes(ymin = ic_inf_50, ymax = ic_sup_50), alpha = 0.4, fill = "darkgray") +
     # Línea azul: tendencia de la abundancia media a través del tiempo
     geom_line(aes(y = media), color = "darkblue", linewidth = 1.5) +
-    # Línea roja punteada: tendencia de la mediana (menos influenciada por valores extremos)
-    geom_line(aes(y = mediana), color = "darkred", linewidth = 1, linetype = "dotted") +
     theme_minimal() +
     theme(
       axis.text = element_text(size = 9, family = "Times"),
@@ -1068,7 +1062,7 @@ panel <- function(especie_nombre, data = mu_df_completo, guardar = TRUE) {
   }
   
   titulo_panel <- paste("Abundancia por Sitio -", especie_nombre)
-  subtitulo_panel <- "Línea azul: media | Línea roja punteada: mediana | Bandas grises: intervalos de confianza (claro=95%, oscuro=50%)"
+  subtitulo_panel <- "Línea azul: media | Banda gris: intervalo de confianza (95%)"
   
   # Combinar todos los gráficos en un solo panel organizado en cuadrícula 3x3
   panel <- grid.arrange(
@@ -1106,21 +1100,16 @@ estpop <- function(especie_nombre, data = mu_df_completo, guardar = TRUE) {
       mediana_poblacion = median(abundancia_total),
       ic_inf_95 = quantile(abundancia_total, 0.025),
       ic_sup_95 = quantile(abundancia_total, 0.975),
-      ic_inf_50 = quantile(abundancia_total, 0.25),
-      ic_sup_50 = quantile(abundancia_total, 0.75),
       .groups = 'drop'
     )
  
   # Crear gráfico 
   p_poblacional <- ggplot(estimacion_poblacional, aes(x = año)) +
     # Banda gris clara: zona de mayor incertidumbre (95% de los datos
-    geom_ribbon(aes(ymin = ic_inf_95, ymax = ic_sup_95), alpha = 0.2, fill = "lightgray") +
-    # Banda gris oscura: zona de menor incertidumbre (50% de los datos)
-    geom_ribbon(aes(ymin = ic_inf_50, ymax = ic_sup_50), alpha = 0.4, fill = "darkgray") +
+    geom_ribbon(aes(ymin = ic_inf_95, ymax = ic_sup_95), alpha = 0.2, fill = "darkgray") +
     # Línea azul: tendencia de la abundancia media a través del tiempo
     geom_line(aes(y = media_poblacion), color = "darkblue", linewidth = 2) +
-    # Línea roja punteada: tendencia de la mediana (menos influenciada por valores extremos)
-    geom_line(aes(y = mediana_poblacion), color = "darkred", linewidth = 1.5, linetype = "dotted") +
+
     theme_minimal() +
     theme(
       axis.text = element_text(size = 12, family = "Times"),
@@ -1132,7 +1121,7 @@ estpop <- function(especie_nombre, data = mu_df_completo, guardar = TRUE) {
       x = "Año",
       y = "Abundancia Poblacional Estimada (9 sitios)",
       title = paste("Estimación Poblacional -", especie_nombre),
-      caption = "Línea azul: media | Línea roja punteada: mediana\nBandas grises: intervalos de confianza (claro=95%, oscuro=50%)"
+      caption = "Línea azul: media | Banda gris: intervalo de confianza (95%)"
     ) +
     scale_x_continuous(breaks = pretty_breaks(n = 6)) +
     scale_y_continuous(labels = comma_format())
