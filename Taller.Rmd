@@ -774,6 +774,128 @@ mu_df_completo$año <- rep(rep(años, each = n_samples), times = n_species)
 sitios_unicos <- unique(mu_df_completo$sitio)
 ```
 
+Además de capturar las estimaciones de abundancia que nos proporciona el modelo, calcularemos tendencias temporales de la especies en los sitios.
+Calcularemos tres tipos de tendencias:
+1.- **Pendiente de regresión lineal**: Cambio promedio por año (individuos/año)
+2.- **Tasa de crecimiento anual promedio**: Cambio porcentual promedio año a año
+3.- **Cambio total en el periodo**: Cambio porcentual desde inicio a final
+
+```{r calculo tendencias}
+# Función para calcular tendencias temporales
+calcular_tendencias <- function(data, especie_nombre, sitio_nombre = NULL) {
+  
+  # Si se especifica sitio, filtrar por sitio y especie; si no, solo por especie
+  if(!is.null(sitio_nombre)) {
+    data_filtrada <- data[data$especie == especie_nombre & data$sitio == sitio_nombre, ]
+    nombre_grupo <- paste(especie_nombre, "-", sitio_nombre)
+  } else {
+    # Para análisis poblacional (todos los sitios)
+    data_filtrada <- data[data$especie == especie_nombre, ]
+    # Sumar abundancias de todos los sitios por año y muestra
+    data_filtrada <- data_filtrada %>%
+      group_by(muestra, año) %>%
+      summarise(abundancia = sum(abundancia), .groups = 'drop')
+    nombre_grupo <- paste(especie_nombre, "- Poblacional")
+  }
+  
+  if(nrow(data_filtrada) == 0) {
+    return(NULL)
+  }
+  
+  # Calcular tendencias para cada muestra del modelo bayesiano
+  tendencias_por_muestra <- data_filtrada %>%
+    group_by(muestra) %>%
+    arrange(año) %>%
+    summarise(
+      # 1. Pendiente de regresión lineal (cambio promedio por año)
+      pendiente_regresion = {
+        if(n() > 2) {
+          modelo_lineal <- lm(abundancia ~ año)
+          coef(modelo_lineal)[2]  # Pendiente
+        } else {
+          NA
+        }
+      },
+      
+      # 2. Tasa de crecimiento anual promedio
+      tasa_crecimiento_promedio = {
+        if(n() > 1) {
+          abundancias <- abundancia[order(año)]
+          años_ord <- sort(año)
+          # Calcular tasas de crecimiento año a año
+          tasas_anuales <- numeric()
+          for(i in 2:length(abundancias)) {
+            if(abundancias[i-1] > 0) {  # Evitar división por cero
+              tasa <- (abundancias[i] - abundancias[i-1]) / abundancias[i-1]
+              tasas_anuales <- c(tasas_anuales, tasa)
+            }
+          }
+          if(length(tasas_anuales) > 0) {
+            mean(tasas_anuales)
+          } else {
+            NA
+          }
+        } else {
+          NA
+        }
+      },
+      
+      # 3. Cambio total en el periodo (abundancia final / abundancia inicial)
+      cambio_total = {
+        if(n() > 1) {
+          abundancias <- abundancia[order(año)]
+          if(abundancias[1] > 0) {
+            (abundancias[length(abundancias)] - abundancias[1]) / abundancias[1]
+          } else {
+            NA
+          }
+        } else {
+          NA
+        }
+      },
+      
+      años_monitoreados = n(),
+      abundancia_inicial = abundancia[which.min(año)],
+      abundancia_final = abundancia[which.max(año)],
+      .groups = 'drop'
+    )
+  
+  # Calcular estadísticas resumen de las tendencias
+  resumen_tendencias <- tendencias_por_muestra %>%
+    summarise(
+      grupo = nombre_grupo,
+      años_total = max(años_monitoreados),
+      
+      # Estadísticas de la pendiente de regresión
+      pendiente_media = mean(pendiente_regresion, na.rm = TRUE),
+      pendiente_ic_inf = quantile(pendiente_regresion, 0.025, na.rm = TRUE),
+      pendiente_ic_sup = quantile(pendiente_regresion, 0.975, na.rm = TRUE),
+      
+      # Estadísticas de la tasa de crecimiento anual
+      tasa_crecimiento_media = mean(tasa_crecimiento_promedio, na.rm = TRUE),
+      tasa_crecimiento_ic_inf = quantile(tasa_crecimiento_promedio, 0.025, na.rm = TRUE),
+      tasa_crecimiento_ic_sup = quantile(tasa_crecimiento_promedio, 0.975, na.rm = TRUE),
+      
+      # Estadísticas del cambio total
+      cambio_total_medio = mean(cambio_total, na.rm = TRUE),
+      cambio_total_ic_inf = quantile(cambio_total, 0.025, na.rm = TRUE),
+      cambio_total_ic_sup = quantile(cambio_total, 0.975, na.rm = TRUE),
+      
+      # Interpretación de la tendencia
+      interpretacion = case_when(
+        pendiente_ic_sup < 0 ~ "Declive significativo",
+        pendiente_ic_inf > 0 ~ "Crecimiento significativo", 
+        TRUE ~ "Sin tendencia clara, el IC incluye el cero" # no podemos descartar que la tendencia sea cero
+      )
+    )
+  
+  return(list(
+    resumen = resumen_tendencias,
+    muestras = tendencias_por_muestra
+  ))
+}
+```
+
 Creamos tablas que resumen nuestros resultados.
 
 ```{r tablas}
@@ -998,15 +1120,17 @@ for(sitio in sitios_unicos) {
 Además generaremos gráficos para las especies. Un panel de 9 gráficos por especie, uno por cada sitio monitoreado y un gráfico general de estimación de abundancia para cada especie, considerando todos los sitios. 
 
 ```{r gráficos por especie}
-# Función para crear gráficos de tendencia temporal por sitio para una especie específica. Estos gráficos nos permiten visualizar cómo cambia la abundancia de una especie en un sitio particular.
-grafico_especie <- function(especie_nombre, sitio_nombre, data = mu_df_completo) {
-  # Filtrar datos solo para la combinación específica de especie y sitio
-  data_filtrada <- data[data$especie == especie_nombre & data$sitio == sitio_nombre, ]
-  # Si no hay datos para esta combinación, devolver NULL
+# Función para crear gráficos de evolución temporal y tendencia por sitio para una especie específica. Estos gráficos nos permiten visualizar cómo cambia la abundancia de una especie en un sitio particular.
+grafico_especie_con_tendencia <- function(especie_nombre, sitio_nombre, data = mu_df_completo) {
+  # Filtrar datos solo para la combinación específica de especie y sitio    
   # Esto puede ocurrir cuando una especie no ha sido observada en un sitio específico  
+  data_filtrada <- data[data$especie == especie_nombre & data$sitio == sitio_nombre, ]
+  
+  # Si no hay datos para esta combinación, devolver NULL
   if(nrow(data_filtrada) == 0) {
     return(NULL) 
   }
+  
   # Calcular estadísticas resumen por año
   stats_datos <- data_filtrada %>%
     group_by(año) %>%
@@ -1017,39 +1141,74 @@ grafico_especie <- function(especie_nombre, sitio_nombre, data = mu_df_completo)
       ic_sup_95 = quantile(abundancia, 0.975), # Límite superior intervalo 95%
       .groups = 'drop'
     )
-  # Crear el gráfico
+  
+  # Calcular tendencias estadísticas para este sitio específico
+  tendencia_sitio <- calcular_tendencias(data, especie_nombre, sitio_nombre)
+  
+  # Crear el gráfico base
   p <- ggplot(stats_datos, aes(x = año)) +
-    # Banda gris clara: zona de mayor incertidumbre (95% de los datos
-    geom_ribbon(aes(ymin = ic_inf_95, ymax = ic_sup_95), alpha = 0.2, fill = "lightgray") +
-    # Línea azul: tendencia de la abundancia media a través del tiempo
-    geom_line(aes(y = media), color = "darkblue", linewidth = 1.5) +
-    theme_minimal() +
+    # Banda gris: zona de incertidumbre (95% de los datos)
+    geom_ribbon(aes(ymin = ic_inf_95, ymax = ic_sup_95), alpha = 0.2, fill = "darkgray") +
+    # Línea azul: evolución de la abundancia media a través del tiempo
+    geom_line(aes(y = media), color = "darkblue", linewidth = 1.5)
+  
+  # Agregar línea de tendencia estadística si tenemos datos suficientes
+  if(!is.null(tendencia_sitio) && !is.na(tendencia_sitio$resumen$pendiente_media)) {
+    # Calcular línea de regresión
+    años_seq <- seq(min(stats_datos$año), max(stats_datos$año), length.out = 100)
+    # Y = intercepto + pendiente * X
+    # Necesitamos calcular el intercepto usando el punto medio
+    año_medio <- mean(stats_datos$año)
+    abundancia_media <- mean(stats_datos$media)
+    intercepto <- abundancia_media - tendencia_sitio$resumen$pendiente_media * año_medio
+    
+    linea_tendencia <- data.frame(
+      año = años_seq,
+      tendencia = intercepto + tendencia_sitio$resumen$pendiente_media * años_seq
+    )
+    
+    # Agregar línea de tendencia
+    p <- p + geom_line(data = linea_tendencia, aes(x = año, y = tendencia), 
+                      color = "darkgreen", linetype = "dashed", linewidth = 1, alpha = 0.8)
+  }
+  
+  # Crear título con información de tendencia
+  if(!is.null(tendencia_sitio)) {
+    pendiente <- round(tendencia_sitio$resumen$pendiente_media, 3)
+    tasa_crecimiento <- round(tendencia_sitio$resumen$tasa_crecimiento_media * 100, 1)
+    interpretacion <- tendencia_sitio$resumen$interpretacion
+    
+    titulo_sitio <- paste0(sitio_nombre, "\n", 
+                          interpretacion)
+  } else {
+    titulo_sitio <- sitio_nombre
+  }
+  
+  p <- p + theme_minimal() +
     theme(
-      axis.text = element_text(size = 9, family = "Times"),
-      axis.title = element_text(size = 10, family = "Times"),
-      plot.title = element_text(size = 11, hjust = 0.5, family = "Times", face = "bold"),
+      axis.text = element_text(size = 8, family = "Times"),
+      axis.title = element_text(size = 9, family = "Times"),
+      plot.title = element_text(size = 9, hjust = 0.5, family = "Times", face = "bold"),
       axis.title.x = element_blank(),
       plot.margin = margin(5,5,5,5)
     ) +
     labs(
-      y = "Abundancia",
-      title = sitio_nombre
+      y = "Abundancia estimada",
+      title = titulo_sitio
     ) +
-    scale_x_continuous(breaks = pretty_breaks(n = 3)) + 
+    scale_x_continuous(breaks = pretty_breaks(n = 6)) + 
     scale_y_continuous(labels = comma_format())
   
   return(p)
 }
 
-# Para cada especie generaremos un panel con los 9 gráficos, uno por sitio.
-panel <- function(especie_nombre, data = mu_df_completo, guardar = TRUE) {
-  
-  cat(paste("Procesando especie:", especie_nombre, "\n"))
+# Panel mejorado con tendencias incluidas
+panel_con_tendencias <- function(especie_nombre, data = mu_df_completo, guardar = TRUE) {
   
   plots_sitios <- list()
   
   for(sitio in sitios_unicos) {
-    p_sitio <- grafico_especie(especie_nombre, sitio, data)
+    p_sitio <- grafico_especie_con_tendencia(especie_nombre, sitio, data)
     if(!is.null(p_sitio)) {
       plots_sitios[[sitio]] <- p_sitio
     } else {
@@ -1061,8 +1220,8 @@ panel <- function(especie_nombre, data = mu_df_completo, guardar = TRUE) {
     }
   }
   
-  titulo_panel <- paste("Abundancia por Sitio -", especie_nombre)
-  subtitulo_panel <- "Línea azul: media | Banda gris: intervalo de confianza (95%)"
+  titulo_panel <- paste("Evolución y Tendencias por Sitio -", especie_nombre)
+  subtitulo_panel <- "Línea azul: abundancia media | Banda gris: IC 95% | Línea verde discontinua: tendencia"
   
   # Combinar todos los gráficos en un solo panel organizado en cuadrícula 3x3
   panel <- grid.arrange(
@@ -1074,7 +1233,7 @@ panel <- function(especie_nombre, data = mu_df_completo, guardar = TRUE) {
   
   if(guardar) {
     ggsave(
-      filename = paste0("resultados_abundancia/por_especie/", especie_nombre, "/abundancia_sitios_", especie_nombre, ".png"),
+      filename = paste0("resultados_abundancia/por_especie/", especie_nombre, "/evolucion_tendencias_sitios_", especie_nombre, ".png"),
       plot = panel,
       width = 15, height = 12, dpi = 300, bg = "white"
     )
@@ -1085,11 +1244,10 @@ panel <- function(especie_nombre, data = mu_df_completo, guardar = TRUE) {
 
 # Función para crear gráficos de tendencia temporal para cada especie. Estos gráficos nos permiten visualizar cómo cambia la abundancia de una especie considerando los 9 sitios monitoreados. Esta función suma las abundancias de todos los sitios para obtener una "estimación de la población local" de cada especie.
 
-estpop <- function(especie_nombre, data = mu_df_completo, guardar = TRUE) {
+estpob_con_tendencias <- function(especie_nombre, data = mu_df_completo, guardar = TRUE) {
   
   data_especie <- data[data$especie == especie_nombre, ]
   # Calcular la abundancia total por año sumando todos los sitios
-  # Para cada muestra del modelo bayesiano y cada año, sumamos las abundancias  
   estimacion_poblacional <- data_especie %>%
     group_by(muestra, año) %>%
     summarise(abundancia_total = sum(abundancia), .groups = 'drop') %>%
@@ -1102,39 +1260,85 @@ estpop <- function(especie_nombre, data = mu_df_completo, guardar = TRUE) {
       ic_sup_95 = quantile(abundancia_total, 0.975),
       .groups = 'drop'
     )
- 
-  # Crear gráfico 
+  
+  # Calcular tendencias poblacionales
+  tendencia_poblacional <- calcular_tendencias(data, especie_nombre, sitio_nombre = NULL)
+  
+  # Crear gráfico base
   p_poblacional <- ggplot(estimacion_poblacional, aes(x = año)) +
-    # Banda gris clara: zona de mayor incertidumbre (95% de los datos
+    # Banda gris: zona de incertidumbre (95% de los datos)
     geom_ribbon(aes(ymin = ic_inf_95, ymax = ic_sup_95), alpha = 0.2, fill = "darkgray") +
-    # Línea azul: tendencia de la abundancia media a través del tiempo
-    geom_line(aes(y = media_poblacion), color = "darkblue", linewidth = 2) +
-
-    theme_minimal() +
+    # Línea azul: evolución de la abundancia media a través del tiempo
+    geom_line(aes(y = media_poblacion), color = "darkblue", linewidth = 2)
+  
+  # Agregar línea de tendencia estadística si tenemos datos suficientes
+  if(!is.null(tendencia_poblacional) && !is.na(tendencia_poblacional$resumen$pendiente_media)) {
+    # Calcular línea de regresión
+    años_seq <- seq(min(estimacion_poblacional$año), max(estimacion_poblacional$año), length.out = 100)
+    # Y = intercepto + pendiente * X
+    año_medio <- mean(estimacion_poblacional$año)
+    abundancia_media <- mean(estimacion_poblacional$media_poblacion)
+    intercepto <- abundancia_media - tendencia_poblacional$resumen$pendiente_media * año_medio
+    
+    linea_tendencia <- data.frame(
+      año = años_seq,
+      tendencia = intercepto + tendencia_poblacional$resumen$pendiente_media * años_seq
+    )
+    
+    # Agregar línea de tendencia
+    p_poblacional <- p_poblacional + 
+      geom_line(data = linea_tendencia, aes(x = año, y = tendencia), 
+               color = "darkgreen", linetype = "dashed", linewidth = 2, alpha = 0.8)
+  }
+  
+  # Crear título y subtítulo con información de tendencias
+  titulo_base <- paste("Evolución y Tendencia Poblacional -", especie_nombre)
+  
+  if(!is.null(tendencia_poblacional)) {
+    pendiente <- round(tendencia_poblacional$resumen$pendiente_media, 2)
+    tasa_crecimiento <- round(tendencia_poblacional$resumen$tasa_crecimiento_media * 100, 2)
+    cambio_total <- round(tendencia_poblacional$resumen$cambio_total_medio * 100, 1)
+    interpretacion <- tendencia_poblacional$resumen$interpretacion
+    
+    subtitulo_tendencia <- paste0("Tendencia: ", interpretacion, " | ", 
+                                 pendiente, " ind/año (", tasa_crecimiento, "%/año) | ",
+                                 "Cambio total: ", cambio_total, "%")
+  } else {
+    subtitulo_tendencia <- "Datos insuficientes para calcular tendencias"
+  }
+  
+  p_poblacional <- p_poblacional + theme_minimal() +
     theme(
       axis.text = element_text(size = 12, family = "Times"),
       axis.title = element_text(size = 14, family = "Times"),
       plot.title = element_text(size = 16, hjust = 0.5, family = "Times", face = "bold"),
+      plot.subtitle = element_text(size = 12, hjust = 0.5, family = "Times", color = "gray0"),
       plot.caption = element_text(size = 10, family = "Times", hjust = 0)
     ) +
     labs(
       x = "Año",
       y = "Abundancia Poblacional Estimada (9 sitios)",
-      title = paste("Estimación Poblacional -", especie_nombre),
-      caption = "Línea azul: media | Banda gris: intervalo de confianza (95%)"
+      title = titulo_base,
+      subtitle = subtitulo_tendencia,
+      caption = "Línea azul: abundancia media | Banda gris: IC 95% | Línea verde discontinua: tendencia"
     ) +
     scale_x_continuous(breaks = pretty_breaks(n = 6)) +
     scale_y_continuous(labels = comma_format())
   
   if(guardar) {
     ggsave(
-      filename = paste0("resultados_abundancia/por_especie/", especie_nombre, "/estimacion_poblacional_", especie_nombre, ".png"),
+      filename = paste0("resultados_abundancia/por_especie/", especie_nombre, "/evolucion_tendencia_poblacional_", especie_nombre, ".png"),
       plot = p_poblacional,
       width = 12, height = 8, dpi = 300, bg = "white"
     )
   }
+  
   # Devolver tanto el gráfico como los datos calculados
-  return(list(grafico = p_poblacional, datos = estimacion_poblacional))
+  return(list(
+    grafico = p_poblacional, 
+    datos = estimacion_poblacional,
+    tendencias = tendencia_poblacional
+  ))
 }
 
 # Obtener lista de especies para procesar
@@ -1149,23 +1353,28 @@ for(especie in especies_nombres) {
 }
 
 # Listas para almacenar todos los resultados generados
-paneles_especies <- list()
-estimaciones_poblacionales <- list()
+paneles_con_tendencias <- list()
+poblacionales_con_tendencias <- list()
 
-# Creamos todos los gráficos por especie
+# Crear todos los gráficos por especie
 for(i in seq_along(especies_nombres)) {
   especie <- especies_nombres[i]
   
-  # Panel por sitios (9 gráficos)
-  panel_sitios <- panel(especie, data = mu_df_completo, guardar = TRUE)
-  paneles_especies[[especie]] <- panel_sitios
+  # Panel por sitios CON información de tendencias
+  panel_sitios_tend <- panel_con_tendencias(especie, data = mu_df_completo, guardar = TRUE)
+  paneles_con_tendencias[[especie]] <- panel_sitios_tend
   
-  # Estimación poblacional general
-  est_poblacional <- estpop(especie, data = mu_df_completo, guardar = TRUE)
-  estimaciones_poblacionales[[especie]] <- est_poblacional
-  
+  # Evolución poblacional general CON información de tendencias
+  est_pobl_tend <- estpob_con_tendencias(especie, data = mu_df_completo, guardar = TRUE)
+  poblacionales_con_tendencias[[especie]] <- est_pobl_tend
 }
 
+# Crear tabla resumen final con todas las tendencias poblacionales
+tendencias_finales <- do.call(rbind, lapply(poblacionales_con_tendencias, function(x) {
+  if(!is.null(x$tendencias)) x$tendencias$resumen else NULL
+}))
+
+if(!is.null(tendencias_finales)) {
+  write_xlsx(tendencias_finales, "resultados_abundancia/tablas/tendencias_poblacionales_finales.xlsx")
+}
 ```
-
-
