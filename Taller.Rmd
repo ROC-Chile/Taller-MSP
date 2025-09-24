@@ -11,13 +11,16 @@ output:
 
 ## Introducción
 
-Este análisis tiene como objetivo estimar abundancias poblacionales y tendencias en el tiempo de aves playeras en nueve sitios monitoreados por el Migratory Shorebirds Project (MSP), utilizando además bases de datos provenientes de dos esquemas de monitoreos adicionales, Censo Neotropical de Aves Acuáticas (CNAA) y Censo Costero de Aves Playeras (CCAP). 
+Las aves playeras son un grupo que enfrenta numerosos amenazas a lo largo de su distribución y que ha mostrado declives preocupantes en sus poblaciones en la mayoría de las especies. Diversos esquemas de monitoreo se efectuan actualmente con una extensa cobertura geográfica, sin embargo las capacidades analíticas para analizar y utilizar estos datos para la toma de decisiones es frecuentemente un piedra de tope. Para promover y facilitar el analisis de datos de conteo de aves playeras, desarrollamos un código fácil de ejecutar para estimar abundancias y tendencias de aves playeras utilizando datos del Migratory Shorebirds Project (MSP), Censo Neotropical de Aves Acuáticas (CNAA) y Censo Costero de Aves Playeras (CCAP). 
 
+Presentamos un modelo simple, utilizando datos recolectados en Chile desde el 2009 al 2025. Este modelo es facilmente replicable con otros datos, ya se de una región más acotada o a una escala más amplia. Desarrollamos este modelo para ser útil para estimar abundancia y tendencias en cualquier país o región que cuenten con esquemas de monitoreo estandarizados. Adicionalmente, el modelo es fácilmente extendido para incluir efectos de variables fijas o aleatorias atingentes a cada situación.
+
+##
 Para comenzar, debemos cargar las librerias que ocuparemos y los diferentes archivos con los que trabajaremos, para luego preparar las bases de datos de los diferentes esquemas de monitoreo. 
-En este flujo dejaremos como ejemplo la preparación de la base de datos de MSP. Las bases de datos de los otros dos esquemas de monitoreo están preparadas y cargadas en el repositorio (CCAPver.rda y CNAAver.rda). Estas están en el formato que se requiere para trabajar con el paquete spAbundance.
+En este flujo dejaremos como ejemplo la preparación de la base de datos de MSP. Las bases de datos de los otros dos esquemas de monitoreo están preparadas y cargadas en el repositorio (CCAPver.rda y CNAAver.rda). Estas están en el formato que se requiere para trabajar con el paquete spAbundance. Ver Doser et al. 2023 para más detalles del paquete.
 
 ```{r librerias y archivos}
-# Cargar librerias y archivos necesarios para el taller
+# Cargar librerias y archivos necesarios para ejectuar el modelo
 library(abind)
 library(corrplot)
 library(dplyr)
@@ -53,17 +56,17 @@ str(CNAAver)
 
 ## Preparación base de datos MSP
 
-Para este ejemplo, trabajaremos con los datos registrados durante los censos realizados en la temporada verano y comenzaremos por identificar los sitios con sus respectivas fechas de censos y especies observadas para determinar las ausencias.
+Para este ejemplo, trabajaremos con los datos registrados durante los censos realizados en la temporada verano y comenzaremos por identificar los sitios con sus respectivas fechas de censos y el total de especies observadas en todos los años para rellenar la matriz de conteo con zeros para las especies no observadas por censo.
 
 ```{r preparación bd MSP}
-df$Date <- as.Date(df$Date) #Le damos formato de fecha a la columna Date
+df$Date <- as.Date(df$Date) #Transformar columna Date a formato fecha
 
-# Seleccionar columnas relevantes y disminuir el tamaño de la base
+# Seleccionar columnas relevantes para acotar tamaño del objeto
 df <- df %>%
   select(Sampling.Unit.Name, Start.Time, End.Time, Spp, Common.Name,
          Scientific.Name, Count, Date)
 
-# Filtrar los registros de la temporada que trabajaremos 
+# Filtrar los datos a la temporada que trabajaremos (en este caso entre diciembre y marzo para temporada de verano austral)
 ds.ver <- df %>% filter(month(Date) <= 3 | month(Date) >= 12) 
 
 # Definir especies de verano
@@ -72,7 +75,7 @@ especies.ver <- ds.ver %>%
   select(Spp, Common.Name, Scientific.Name) %>%
   distinct()
 
-# Identificar las filas con '---' en el código de la especie, son censos sin observaciones
+# Identificar las filas con '---' en el código de la especie (censos sin observaciones)
 censos_sin_obs.ver <- ds.ver %>%
   filter(Spp == "---")
 
@@ -109,20 +112,20 @@ ds.ver2 <- ds.ver %>%
 # Añadir columna presencia/ausencia
 ds.ver2$presencia <- ifelse(ds.ver2$Count > 0, 1, 0)
 
-# combinaciones de especie y unidad de muestreo según observaciones
+# Combinaciones de especie y unidad de muestreo según observaciones
 combinaciones <- ds.ver2 %>%
   select(Spp, Sampling.Unit.Name) %>%
   distinct()
 
-# identificar fechas de censos en cada unidad de muestreo
+# Identificar fechas de censos en cada unidad de muestreo
 fechas.censos <- ds.ver2 %>%
   select(Sampling.Unit.Name, Date) %>%
   distinct()
 
-# combinar especies con fechas de censos para cada unidad de muestreo
+# Combinar especies con fechas de censos para cada unidad de muestreo
 combinaciones_expandidas <- left_join(combinaciones, fechas.censos, by = "Sampling.Unit.Name", relationship = "many-to-many")
 
-# unión con datos originales para completar las ausencias
+# Unión con datos originales para completar las ausencias
 ds.ver.compl <- left_join(combinaciones_expandidas, ds.ver2, by = c("Spp", "Sampling.Unit.Name", "Date"))%>%
   replace_na(list(presencia = 0))
 
@@ -222,6 +225,7 @@ MSPver <- MSPver %>%
   mutate(Date = ymd(Date), 
          year = year(Date)) 
 
+# En el caso de tener más de una réplica de censo en algún año optamos por hacer uso de los datos adicionales y promediarlos. Opcionalmente podrían usar una opción menos conservadora y mantener solo el valor máximo entre las réplicas
 # Para sitios con múltiples fechas en 2021, promediamos
 MSPver <- MSPver %>%
   group_by(Sampling.Unit.Name, Spp, Date) %>%
@@ -275,6 +279,7 @@ MSPver <- bind_rows(MSPver, nuevas_ausencias)
 
 
 # Filtrar solo las especies de aves playeras
+# Para esto es necesario determinar el valor minimo y máximo de la "primera" y "última" especie de ave playera en sus datos según el orden taxonómico. La base de datos de eBird cuenta con una columna, "Orden.taxonómico", con un número único por especie.
 MSPver <- MSPver %>%
   filter(Orden.taxonómico >= 99 & Orden.taxonómico <= 161)
 
@@ -298,7 +303,7 @@ y <- matrix(NA, nrow = length(all_sp), ncol = length(all_UA))
 rownames(y) <- all_sp
 colnames(y) <- all_UA
 
-# Llenar la matriz con los valores de Count
+# Llenar la matriz con los valores de conteo "Count"
 for (i in 1:nrow(MSPverSitios)) {
   UA <- MSPverSitios$SitioAño[i]
   sp <- MSPverSitios$Scientific.Name[i]     
@@ -348,7 +353,11 @@ save(MSPver, file = 'MSPver.rda')
 
 ## Preparación base de datos unificada 
 
-Ahora que tenemos preparadas las bases de datos con las que trabajaremos, debemos unificarlas y dejarlas en el formato que se necesita para trabajar con el paquete spAbundance.
+En el caso de contar con datos de más de un esquema de monitoreo, repetir el paso anterior de preparación de datos para cada esquema.
+
+Ahora que tenemos preparadas las bases de datos con las que trabajaremos, debemos unificarlas y dejarlas en el formato requerido por el paquete spAbundance.
+
+Un punto importante a considerar es que al únificar datos de más de un esquema solo es posible incluir especies que estén presentes en todos los esquemas. Para analizar los datos de todas las especies en cada esquema se debe analizar los datos de forma separada.
 
 ```{r preparación base de datos unificada}
 # Obtener nombres de las especies
@@ -415,6 +424,8 @@ y_combined[all_na] <- NA
 conteo_por_especie <- rowSums(!is.na(y_combined))
 total_por_especie <- rowSums(y_combined, na.rm = TRUE)
 
+# En este modelo optamos por incluir solo las especies con mayor representatividad y abundancia en los sitios censados para maximizar la robustes de los resultados. Especies con muy pocos registros o abundancia baja serán dificiles de estimar su abundancia con un rango aceptable de error.
+
 # Evaluaremos el top 10 de las especies según presencia en sitios-años (cantidad de registros x especie)
 sort(conteo_por_especie, decreasing = TRUE)[1:10]
 
@@ -438,7 +449,7 @@ MSP.ind  <- as.numeric(colnames(y_filtrado) %in% colnames(MSPver$y))
 CNAA.ind <- as.numeric(colnames(y_filtrado) %in% colnames(CNAAver$y))
 CCAP.ind <- as.numeric(colnames(y_filtrado) %in% colnames(CCAPver$y))
 
-# lista de covariables
+# Lista de covariables
 covs <- list(
   MSP  = MSP.ind, #Agregamos el esquemas como covariable, con valor de 0 y 1, donde 1 indica que ese dato proviene del esquema
   CNAA = CNAA.ind, #Agregamos el esquemas como covariable, con valor de 0 y 1, donde 1 indica que ese dato proviene del esquema
@@ -504,7 +515,7 @@ data_list$covs <- lapply(data_list$covs, function(x) {
   }
 })
 
-# Dejamos el año como factor
+# Para evitar autocorrelación temporal incluimos el año como una variable categórica y no numérica
 data_list$covs$year <- as.factor(data_list$covs$year)
 
 # Revisamos
