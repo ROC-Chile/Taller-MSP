@@ -524,7 +524,7 @@ str(data_list)
 
 ## Modelado de abunancia con GLMM
 
-Ahora que tenemos nuestros datos preparados, vamos a construir un modelo estadístico para estimar las abundancias y tendencias en el tiempo de las aves playeras seleccionadas. Utilizaremos un Modelo Linear Generalizado Mixto (GLMM) que puede manejar datos de conteo con muchos ceros y sobredispersión.
+Ahora que tenemos nuestros datos preparados, vamos a construir un modelo estadístico para estimar abundancias por año y la tendencia de las aves playeras seleccionadas. Utilizaremos un Modelo Linear Generalizado Mixto (GLMM) bayesiano que puede manejar datos de conteo con muchos ceros y sobredispersión.
 
 Preparación del modelo
 
@@ -532,7 +532,8 @@ Preparación del modelo
 # Obtener el número de especies para configurar el modelo
 n.sp <- dim(data_list$y)[1]
 
-# Configuración de Valores Iniciales. Los valores iniciales son el "punto de partida" para el algoritmo
+# Configuración de Valores Iniciales. Los valores iniciales son el "punto de partida" desde donde el modelo "busca" el valor real de cada parametro estimado.
+# Estos valores pueden ser modificados para optimizar el modelo de acuerdo a información previa o en el contexto de una hipótesis específica.
 ms.inits <- list(
   beta.comm = 0, #Efecto promedio a nivel de comunidad
   beta = 0, #Efectos específicos por especie  
@@ -556,7 +557,7 @@ ms.priors <- list(
   kappa.unif = list(a = 0, b = 100)
 )
 
-# Configuración de parámetros de muestreo. Estos controlan cómo el algoritmo explora el espacio de parámetros (Valores más altos = pasos más grandes, valores más bajos = pasos más pequeños).
+# Configuración de parámetros de muestreo. Estos controlan cómo el modelo explora el espacio de parámetros (Valores más altos = pasos más grandes, valores más bajos = pasos más pequeños).
 ms.tuning <- list(
   beta = 0.2, #Tamaño de paso para efectos de especies
   beta.star = 0.3, #Tamaño de paso para nuevos efectos
@@ -564,7 +565,7 @@ ms.tuning <- list(
 )
 
 # Modelo nulo 
-# El modelo nulo incluye solo un intercepto (~ 1). Se asume que la abundancia es constante para todas las especies a través del tiempo y entre esquemas de monitoreo. Es nuestro "modelo base", el más simple.
+# El modelo nulo incluye solo el parametro de intercepto (~ 1). Se asume que la abundancia es constante para todas las especies a través del tiempo y entre esquemas de monitoreo. Es nuestro "modelo base", el más simple.
 out.0 <- msAbund(
   formula = ~ 1, 
   data = data_list,
@@ -582,8 +583,11 @@ out.0 <- msAbund(
   n.chains = 4 #Número de cadenas independientes (para verificar convergencia)          
 )
 
+# Resumen de los resultados del modelo nulo
+summary(out.0)
+
 # Modelo completo
-# El modelo completo incluye las covariables (~ MSP + CNAA + CCAP + year), lo que le permite capturar diferencias entre esquemas de monitoreo y tendencias temporales.
+# El modelo completo incluye las covariables que seleccionemos (en este caso: ~ MSP + CNAA + CCAP + year), lo que le permite capturar diferencias entre esquemas de monitoreo y tendencias temporales.
 out.mod <- msAbund(
   formula = ~ MSP + CNAA + CCAP + year, #Los tres esquemas y el año como variables fijas 
   data = data_list,
@@ -601,33 +605,34 @@ out.mod <- msAbund(
   n.chains = 4 #Número de cadenas independientes (para verificar convergencia)          
 )
 
+# Resumen de los resultados del modelo completo
+summary(out.mod)
+
 # Comparación de Modelos: Modelo Completo (out.mod) vs Modelo Nulo (out.0)
 
-# Para evaluar si las covariables incluidas en el modelo completo realmente mejoran nuestras predicciones, comparamos los modelos usando WAIC (Widely Applicable Information Criterion). 
-# WAIC es una medida que balanza el ajuste del modelo con su complejidad. Valores más BAJOS de WAIC indican mejores modelos.
+# Para evaluar si las covariables incluidas en el modelo completo realmente mejoran nuestras predicciones, comparamos los modelos mediante el estadístico WAIC (Widely Applicable Information Criterion). 
+# WAIC es una medida que balanza el ajuste del modelo con su complejidad. Valores más BAJOS de WAIC un mejor ajuste del modelo a los datos.
 
 # Calculamos WAIC para ambos modelos
 waicAbund(out.0)
 waicAbund(out.mod)
 
-summary(out.mod)
 ```
 
 # Diagnosticos del Modelo
 
-Una vez ejecutado el modelo, es importante verificar que funciona correctamente. Los diagnósticos nos permiten evaluar si nuestras estimaciones son confiables.
-Los diagnósticos nos ayudan a entender:
+Una vez ejecutado los modelos, es importante verificar que funcionó correctamente. Los diagnósticos nos permiten evaluar si nuestras estimaciones son confiables.
+Utilizamos dos diagnósticos que nos ayudan a entender:
 
-1. **Verificación Predictiva Posterior**: Si el modelo replica bien los datos observados
-2. **Residuales**: Si hay patrones no explicados por el modelo 
+1. **Verificación Predictiva Posterior**: Si el modelo replica bien los datos observados.
+2. **Residuales**: Si hay patrones no explicados por el modelo.
 
 ```{r diagnosticos}
-# 1. Posterior Predictive Check (PPC). Este análisis compara los datos observados con lo que el modelo predice
+# 1. Posterior Predictive Check (PPC). Este análisis compara los datos observados con las que predice el modelo
 verificacion_predictiva <- ppcAbund(out.mod, fit.stat = 'freeman-tukey', group = 0)
-print(summary(verificacion_predictiva)) # Si el valor de Bayesian p-value está entre 0.3 y 0.7, el modelo ajusta bien
+print(summary(verificacion_predictiva)) # Si el valor de Bayesian p-value está entre 0.3 y 0.7, el ajuste del modelo se considera aceptable.
 
-# 2. Análisis de residuales. Los residuales son las diferencias entre lo observado y lo predicho
-
+# 2. Análisis de residuales. Los residuales son las diferencias entre los valores  observado y los predichos
 # Obtener valores ajustados (predicciones del modelo)
 valores_ajustados <- fitted(out.mod)
 promedio_ajustado <- apply(valores_ajustados, 2, mean)
@@ -736,17 +741,17 @@ Problemas identificados:
 
 Para mejorar algunos de los problemas mencionados creemos que puede ser relevante incluir variables ambientales como factores climáticos (temperatura, precipitación), hábitat (superficie o tipo de sustrato), factores antropogénicos (pertubaciones o cercanía a ciudades) o incluso ciclos periódicos, como el fenómeno El Niño/La Niña.
 
-Además debemos considerar cambiar la familia de distribución usada (Binomial Negativa) por una cero inflado, como la Binomial Negativo Cero Inflado, por la características de los datos (sobredispersión y exceso de ceros). Sin embargo, el paquete spAbundance actualmente solo maneja las familias 'NB' (binomial negativo), 'Poisson', 'Gaussian' y 'zi-Gaussian'.
+Además debemos considerar cambiar la familia de distribución usada (Binomial Negativa) por una cero inflado, como la Binomial Negativo Cero Inflado, por la características de los datos (sobredispersión y exceso de ceros). Sin embargo, el paquete spAbundance actualmente solo permite el uso de las familias 'NB' (binomial negativo), 'Poisson', 'Gaussian' y 'zi-Gaussian'. Esperamos que el desarrollo de este paquete aún reciente extienda sus capacidades para permitir la distribución Binomial Negtivo Cero Inflado.
 
 
-# Análisis de Resultados del Modelo de Abundancia 
+# Visualización de Resultados
 
 Una vez que tenemos nuestro modelo ajustado, es importante extraer y visualizar los resultados de manera comprensible. En esta sección crearemos tablas resumen y gráficos que nos ayuden a interpretar las abundancias estimadas y las tendencias temporales.
 
 El modelo nos proporciona estimaciones de abundancia para cada combinación de sitio, año y especie. Necesitamos extraer esta información y organizarla de manera clara.
 
 ```{r resultados}
-#Creamos las carpetas en las que guardaremis los resultados
+#Creamos las carpetas en las que guardaremos los resultados
 dir.create("resultados_abundancia", showWarnings = FALSE)
 dir.create("resultados_abundancia/tablas", showWarnings = FALSE)
 dir.create("resultados_abundancia/graficos", showWarnings = FALSE)
@@ -761,7 +766,7 @@ mu_samples <- fitted(out.mod)  # Función que extrae las estimaciones del modelo
 
 # Dimensiones de nuestros resultados
 n_samples <- dim(mu_samples)[1]  # Número de muestras de la distribución posterior
-n_species <- dim(mu_samples)[2]  # Número de especies (6 en nuestro caso)
+n_species <- dim(mu_samples)[2]  # Número de especies (6 en el caso de estos datos)
 n_obs     <- dim(mu_samples)[3]  # Número de observaciones (combinaciones de sitio-año)
 
 # Recuperamos el nombre de las especies 
@@ -1128,7 +1133,7 @@ for(sitio in sitios_unicos) {
 
 ```
 
-Además generaremos gráficos para las especies. Un panel de 9 gráficos por especie, uno por cada sitio monitoreado y un gráfico general de estimación de abundancia para cada especie, considerando todos los sitios. 
+Además generaremos gráficos para las especies. En este caso, un panel de 9 gráficos por especie, uno por cada sitio monitoreado, y un gráfico general de estimación de abundancia para cada especie, considerando todos los sitios. 
 
 ```{r gráficos por especie}
 # Función para crear gráficos de evolución temporal y tendencia por sitio para una especie específica. Estos gráficos nos permiten visualizar cómo cambia la abundancia de una especie en un sitio particular.
