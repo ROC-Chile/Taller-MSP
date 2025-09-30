@@ -5,10 +5,10 @@ El Migratory Shorebird Project(MSP) busca potenciar las capacidades locales para
 El código está estructurado como un tutorial, detallando los pasos a seguir para preparar los datos (utilizamos como ejemplo la preparación de datos MSP) y construir el modelo utilizando el paquete **SpAbundance** de [Doser et al. 2024](https://besjournals.onlinelibrary.wiley.com/doi/pdf/10.1111/2041-210X.14332). Este paquete permite construir modelos bajo un marco de estadística Bayesiana, pero drásticamente simplifica su implementación al adoptar el syntax ampliamente utilizado por paquetes ampliamente utilizados como **lmer**. El modelo desarrollado como ejemplo es simple, pero permite la inclusión sencilla de variables adicionales que puedan ser de su interés. Para aprovechar al máxima esta herramienta se requiere un conocimiento moderado de R.
 
 ## Cómo utilizar el código
-El archivo [Taller.Rmd](https://github.com/ROC-Chile/Taller-MSP/blob/main/Taller.Rmd) contiene el código para preparar los datos en el formato requerido por [spAbundance](https://doserlab.com/files/spabundance-web/).
-- Primero integra los datos de los distintos esquemas en una sola base de datos.
-- Luego construye un Modelo Lineal Generalizado Mixto (GLMM) para determinar abundancia y tendencias en el tiempo.
-- Por último grafica los resultados del modelo con ejemplos a nivel de especie, sitio y total entre sitios. 
+En el archivo [Taller.Rmd](https://github.com/ROC-Chile/Taller-MSP/blob/main/Taller.Rmd) encontrarán el código. Sigue la siguiente estructura:
+1. Preparar los datos en el formato requerido por [spAbundance](https://doserlab.com/files/spabundance-web/) e integra los datos de los distintos esquemas en una sola base de datos.
+2. Construye un Modelo Lineal Generalizado Mixto (GLMM) para determinar abundancia y tendencias en el tiempo.
+3. Grafica los resultados del modelo con ejemplos a nivel de especie, sitio y total entre sitios. 
 
 ## 
 Si tienes preguntas o necesitas ayuda para usar este código puedes enviar un correo a [Marion Díaz](mariondiaz@redobservadores.cl) o [Erik Sandvig](eriksandvig@redobservadores.cl).
