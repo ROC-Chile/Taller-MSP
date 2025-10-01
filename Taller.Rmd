@@ -40,7 +40,7 @@ library(writexl)
 
 # Cargar datos
 df <- read.csv("MSPabr2025.csv", header = TRUE) #Base de datos de MSP
-df.u <- read.csv('UnidadesMSP.csv') #Base de datos con el detalle de los sitios MSP
+df.u <- read.csv('UnidadesMSP.csv', sep = ";") #Base de datos con el detalle de los sitios MSP
 df.a <- read.csv('AvesChile.csv') #Base de datos de las aves presentes en Chile
 
 load("CCAPver.rda") #Base de datos del Censo Costero de Aves Playeras preparado
@@ -99,9 +99,7 @@ nuevas_filas <- map_df(1:nrow(censos_sin_obs.ver), function(i) {
            SiteName = fila_actual$SiteName,
            Researcher = fila_actual$Researcher,
            Other.Observers.Count = fila_actual$Other.Observers.Count,
-           nresearcher = fila_actual$nresearcher,
-           Ha = fila_actual$Ha,
-           lha = fila_actual$lha)
+           nresearcher = fila_actual$nresearcher)
 })
 
 # Combinar datos originales y nuevas filas
@@ -202,7 +200,7 @@ fechas_por_unidad <- MSPver %>%
 
 MSPver <- MSPver %>%
   select(SiteName, Sampling.Unit.Name, Spp,Scientific.Name, Count, Date, Longitude, 
-         Latitude, Ha)
+         Latitude, Ha, Sitio)
 
 MSPver$Date <- as.Date(MSPver$Date, format = "%Y-%m-%d")
 
@@ -235,6 +233,8 @@ MSPver <- MSPver %>%
     SiteName = first(SiteName),
     Scientific.Name = first(Scientific.Name),
     Spp = first(Spp),
+    Ha = first(Ha),
+    Sitio = first(Sitio),
     .groups = "drop"
   )
 
@@ -288,29 +288,31 @@ MSPver <- MSPver %>%
   filter(!is.na(SiteName))
 
 # Obtener la lista completa de "SitioAño",los años y especies
-all_UA <- unique(MSPver$SitioAño)
+all_SA <- unique(MSPver$SitioAño)
 all_years <- unique (MSPver$year)
 all_sp <- unique (MSPver$Scientific.Name)
 
 # Preparación de la base de datos MSP en el formato que pide spAbundance, a nivel de sitio
 MSPverSitios <- MSPver %>%
   group_by(SitioAño, Scientific.Name, year) %>%
-  summarise(Count = sum(Count, na.rm = TRUE), .groups = 'drop')
-
+  summarise(Count = sum(Count, na.rm = TRUE),
+            Ha = first(Ha),    
+            Sitio = first(Sitio),
+            .groups = 'drop')
 
 # Crear la matriz de conteo
-y <- matrix(NA, nrow = length(all_sp), ncol = length(all_UA))
+y <- matrix(NA, nrow = length(all_sp), ncol = length(all_SA))
 rownames(y) <- all_sp
-colnames(y) <- all_UA
+colnames(y) <- all_SA
 
 # Llenar la matriz con los valores de conteo "Count"
 for (i in 1:nrow(MSPverSitios)) {
-  UA <- MSPverSitios$SitioAño[i]
+  SA <- MSPverSitios$SitioAño[i]
   sp <- MSPverSitios$Scientific.Name[i]     
   count <- MSPverSitios$Count[i]
   
   row_index <- match(sp, all_sp)
-  col_index <- match(UA, all_UA)
+  col_index <- match(SA, all_SA)
   
   y[row_index, col_index ] <- count
 }
@@ -319,26 +321,56 @@ media_year <- mean(MSPverSitios$year)
 desviacion_year <- sd(MSPverSitios$year)
 MSPverSitios$years <- (MSPverSitios$year - media_year) / desviacion_year
 
-
 # Crear la matriz de año
-año <- matrix(NA, nrow = length(all_UA), ncol = 1)
-rownames(año) <- all_UA
+año <- matrix(NA, nrow = length(all_SA), ncol = 1)
+rownames(año) <- all_SA
 colnames(año) <- "año"
 
 # Llenar la matriz con los valores de año
 for (i in 1:nrow(MSPverSitios)) {
-  UA <- MSPverSitios$SitioAño[i]
+  SA <- MSPverSitios$SitioAño[i]
   year_value <- MSPverSitios$year[i]  
   
-  row_index <- match(UA, all_UA)
+  row_index <- match(SA, all_SA)
   
   año[row_index, ] <- year_value  
 }
 
 
+# Crear la matriz de sitio
+sitio <- matrix(NA, nrow = length(all_SA), ncol = 1)
+rownames(sitio) <- all_SA
+colnames(sitio) <- "sitio"
+# Llenar la matriz con los valores de sitio
+for (i in 1:nrow(MSPverSitios)) {
+  SA <- MSPverSitios$SitioAño[i]
+  site_value <- MSPverSitios$Sitio[i]  
+  
+  row_index <- match(SA, all_SA)
+  
+  sitio[row_index, ] <- site_value  # ✓ Corregido
+}
+
+# Crear la matriz de superficie
+Ha <- matrix(NA, nrow = length(all_SA), ncol = 1)
+rownames(Ha) <- all_SA
+colnames(Ha) <- "Ha"  # ✓ Corregido el nombre de columna
+# Llenar la matriz con los valores de superficie
+for (i in 1:nrow(MSPverSitios)) {
+  SA <- MSPverSitios$SitioAño[i]
+  Ha_value <- MSPverSitios$Ha[i]  
+  
+  row_index <- match(SA, all_SA)
+  
+  Ha[row_index, ] <- Ha_value  # ✓ Corregido
+}
+
+
 # Crear el objeto covs como una lista
 covs <- list(
-  "año" = año
+  "año" = año,
+  "sup" = Ha,
+  "sitio" = sitio
   )
 
 # Base de datos 
