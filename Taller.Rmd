@@ -732,6 +732,11 @@ Gráfico 2.- Q-Q plot (comparación con distribución normal): Los puntos se des
 
 Gráfico 3.- Histograma de residuales: La distribución no es normal, hay asimetría.
 
+Este histograma nos dice que nuestro modelo tiene un problema:
+- Está prediciendo más aves de las que realmente observamos
+- Los residuales deberían estar centrados en cero, pero están sesgados
+- Esto sugiere que necesitamos mejorar el modelo
+
 Problemas identificados:
 - Sobredispersión: La variabilidad real es mayor que la asumida por el modelo
 - Heterocedasticidad: La varianza no es constante a través de los valores predichos
