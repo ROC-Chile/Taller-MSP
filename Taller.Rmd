@@ -667,92 +667,83 @@ print(summary(verificacion_predictiva)) # Si el valor de Bayesian p-value está 
 # 2. Análisis de residuales. Los residuales son las diferencias entre los valores  observado y los predichos
 # Obtener valores ajustados (predicciones del modelo)
 valores_ajustados <- fitted(out.mod)
-promedio_ajustado <- apply(valores_ajustados, 2, mean)
+promedio_ajustado_matrix <- apply(valores_ajustados, c(2, 3), mean)
 
 # Preparar datos para el análisis de residuales
 datos_observados <- as.vector(data_list$y)
-valores_predichos <- rep(promedio_ajustado, each = nrow(data_list$y))
+valores_predichos <- as.vector(promedio_ajustado_matrix)
 
 # Filtrar solo valores válidos (sin NA y valores predichos > 0)
 indices_validos <- !is.na(datos_observados) & !is.na(valores_predichos) & valores_predichos > 0
 obs_validos <- datos_observados[indices_validos]
 pred_validos <- valores_predichos[indices_validos]
 
-# Verificar que tenemos datos válidos
-if (length(obs_validos) == 0) {
-  cat("⚠ No hay datos válidos para calcular residuales.\n")
-} else {
-  cat("Analizando", length(obs_validos), "observaciones válidas...\n")
-  
-  # Calcular residuales de Pearson (estandarizados) de forma más robusta
+# Calcular residuales de Pearson (estandarizados) de forma más robusta
   # Agregamos un pequeño valor para evitar divisiones problemáticas
-  pred_validos_seguro <- pmax(pred_validos, 0.001)
-  residuales <- (obs_validos - pred_validos) / sqrt(pred_validos_seguro)
-  
-  # Remover valores extremos o problemáticos
-  residuales_limpios <- residuales[is.finite(residuales) & !is.na(residuales)]
-  
-  if (length(residuales_limpios) == 0) {
-    cat("⚠ No se pudieron calcular residuales válidos.\n")
-  } else {
-    cat("Resumen de residuales (", length(residuales_limpios), "valores):\n")
-    cat("  Mínimo:", round(min(residuales_limpios, na.rm = TRUE), 3), "\n")
-    cat("  1er Cuartil:", round(quantile(residuales_limpios, 0.25, na.rm = TRUE), 3), "\n")
-    cat("  Mediana:", round(median(residuales_limpios, na.rm = TRUE), 3), "\n")
-    cat("  Media:", round(mean(residuales_limpios, na.rm = TRUE), 3), "\n")
-    cat("  3er Cuartil:", round(quantile(residuales_limpios, 0.75, na.rm = TRUE), 3), "\n")
-    cat("  Máximo:", round(max(residuales_limpios, na.rm = TRUE), 3), "\n")
-    
-    # Actualizar la variable residuales para usar en los gráficos
-    residuales <- residuales_limpios
-  }
-}
+pred_validos_seguro <- pmax(pred_validos, 0.001)
+residuales <- (obs_validos - pred_validos) / sqrt(pred_validos_seguro)
+
+# Remover valores extremos o problemáticos
+residuales_limpios <- residuales[is.finite(residuales) & !is.na(residuales)]
+
+cat("Resumen de residuales (", length(residuales_limpios), "valores):\n")
+cat("  Mínimo:", round(min(residuales_limpios), 3), "\n")
+cat("  1er Cuartil:", round(quantile(residuales_limpios, 0.25), 3), "\n")
+cat("  Mediana:", round(median(residuales_limpios), 3), "\n")
+cat("  Media:", round(mean(residuales_limpios), 3), "\n")
+cat("  3er Cuartil:", round(quantile(residuales_limpios, 0.75), 3), "\n")
+cat("  Máximo:", round(max(residuales_limpios), 3), "\n")
 
 # Gráficos del diagnóstico 
-# Para los gráficos de residuales, necesitamos emparejar correctamente los datos
-indices_finales <- !is.na(datos_observados) & !is.na(valores_predichos) & 
-                   valores_predichos > 0.001 & is.finite((datos_observados - valores_predichos) / sqrt(valores_predichos))
-
-obs_finales <- datos_observados[indices_finales]
-pred_finales <- valores_predichos[indices_finales]
-residuales_finales <- (obs_finales - pred_finales) / sqrt(pred_finales)
+# Para los gráficos de residuales, necesitamos crear índice de valores finitos para aplicar consistentemente
+indice_finitos <- is.finite(residuales) & !is.na(residuales)
+pred_finales <- pred_validos[indice_finitos]
+obs_finales <- obs_validos[indice_finitos]
+residuales_finales <- residuales_limpios
 
 # Configuramos la ventana gráfica para mostrar los 3 gráficos en una cuadrícula de 2x2
 par(mfrow = c(2, 2), mar = c(4, 4, 3, 2))
 
 # Gráfico 1: Residuales vs Valores Ajustados
 # Los puntos deben estar dispersos aleatoriamente alrededor de la línea roja (y=0). Patrones indican problemas del modelo.
-plot(pred_finales, residuales_finales, 
-         main = "Residuales vs Valores Ajustados",
-         xlab = "Valores Ajustados", 
-         ylab = "Residuales de Pearson",
-         pch = 16, col = rgb(0, 0, 1, 0.6)) +
-  abline(h = 0, col = "red", lty = 2, lwd = 2) 
+with(plot(pred_finales, residuales_finales, 
+     main = "Residuales vs Valores Ajustados",
+     xlab = "Valores Ajustados", 
+     ylab = "Residuales de Pearson",
+     pch = 16, col = rgb(0, 0, 1, 0.6)),
+abline(h = 0, col = "red", lty = 2, lwd = 2))
 
 # Gráfico 2: Q-Q plot (comparación con distribución normal)
 # Los puntos deben seguir la línea roja. Desviaciones indican que los residuales no siguen una distribución normal
-qqnorm(residuales_finales, main = "Q-Q Plot de Residuales",
-         pch = 16, col = rgb(0, 0, 1, 0.6))
-qqline(residuales_finales, col = "red", lwd = 2)
+with(qqnorm(residuales_finales, main = "Q-Q Plot de Residuales",
+            pch = 16, col = rgb(0, 0, 1, 0.6)),
+     qqline(residuales_finales, col = "red", lwd = 2))
   
 # Gráfico 3: Histograma de residuales
 # Debe parecerse a una campana (distribución normal)
-hist(residuales, main = "Distribución de Residuales", 
-    xlab = "Residuales de Pearson", 
-    col = rgb(0.7, 0.9, 1, 0.7), border = "black", 
-    breaks = min(30, max(5, length(residuales)/20)))  # Ajustar número de breaks
-  
-  # Agregar curva normal teórica
-  x_norm <- seq(min(residuales), max(residuales), length = 100)
-  y_norm <- dnorm(x_norm, mean(residuales), sd(residuales))
-  y_norm <- y_norm * length(residuales) * diff(range(residuales)) / 
-              min(30, max(5, length(residuales)/20))
-  lines(x_norm, y_norm, col = "red", lwd = 2)
+num_breaks <- min(30, max(5, length(residuales_finales)/20))
+
+with(hist(residuales_finales,
+          main = "Distribución de Residuales", 
+          xlab = "Residuales de Pearson", 
+          col = rgb(0.7, 0.9, 1, 0.7), border = "black", 
+          breaks = num_breaks),
+     
+     {
+       x_norm <- seq(min(residuales_finales), max(residuales_finales), length = 100)
+       y_norm <- dnorm(x_norm, mean(residuales_finales), sd(residuales_finales))
+       
+       # Escalar la densidad normal para que encaje con el histograma
+       y_norm_scaled <- y_norm * length(residuales_finales) * diff(range(residuales_finales)) / num_breaks
+       
+       lines(x_norm, y_norm_scaled, col = "red", lwd = 2)
+     })
 
 # Restaurar configuración gráfica
 par(mfrow = c(1, 1))
 
 ```
+
 
 # Limitaciones del Modelo y Consideraciones Importantes
 
